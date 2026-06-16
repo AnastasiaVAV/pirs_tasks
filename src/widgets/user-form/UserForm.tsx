@@ -1,7 +1,7 @@
 import { Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { Controller } from 'react-hook-form';
-import { Input, Button, DatePicker, Select, ErrorAlert } from 'shared/ui';
+import { Input, Button, DatePicker, Select, Avatar, ErrorAlert } from 'shared/ui';
 import { useCreateUserForm } from 'features/create-user';
 import { useUpdateUserForm } from 'features/update-user';
 import { useFoodList } from 'features/fetch-food-list';
@@ -15,16 +15,18 @@ export const UserForm = (props: UserFormProps) => {
   const navigate = useNavigate();
   const { options: foodOptions } = useFoodList();
 
-  const createForm = useCreateUserForm(() => navigate('/users'));
-  const updateForm = useUpdateUserForm(props.mode === 'update' ? props.user : ({} as User), () =>
-    navigate(props.mode === 'update' ? `/users/${props.user.id}` : '/users')
-  );
+  const createForm = useCreateUserForm(() => {
+    void navigate('/users');
+  });
+  const updateForm = useUpdateUserForm(props.mode === 'update' ? props.user : ({} as User), () => {
+    void navigate(props.mode === 'update' ? `/users/${props.user.id}` : '/users');
+  });
 
   const isUpdate = props.mode === 'update';
   const { form, onSubmit, isLoading } = isUpdate ? updateForm : createForm;
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)}>
+    <form onSubmit={(e) => void form.handleSubmit(onSubmit)(e)}>
       <Stack spacing={3}>
         <Typography variant="h5">
           {isUpdate ? 'Редактирование пользователя' : 'Создание пользователя'}
@@ -37,13 +39,23 @@ export const UserForm = (props: UserFormProps) => {
           <ErrorAlert message="Произошла ошибка при создании. Попробуйте позже." />
         )}
 
+        {isUpdate && (
+          <Stack alignItems="center">
+            <Avatar
+              photoId={props.user.photo_id}
+              fallback={props.user.username}
+              sx={{ width: 100, height: 100 }}
+            />
+          </Stack>
+        )}
+
         <Controller
           name="username"
           control={form.control}
           render={({ field, fieldState }) => (
             <Input
               {...field}
-              label="Имя пользователя"
+              label="Имя"
               error={!!fieldState.error}
               helperText={fieldState.error?.message}
               fullWidth
@@ -116,10 +128,10 @@ export const UserForm = (props: UserFormProps) => {
         />
 
         <Stack direction="row" spacing={2}>
-          <Button type="submit" variant="contained" disabled={isLoading}>
+          <Button type="submit" variant="contained" color="success" disabled={isLoading}>
             {isUpdate ? 'Сохранить' : 'Создать'}
           </Button>
-          <Button variant="outlined" onClick={() => navigate(-1)}>
+          <Button variant="outlined" onClick={() => void navigate(-1)}>
             Отмена
           </Button>
         </Stack>
