@@ -80,28 +80,27 @@ export const UsersTable = () => {
         </Button>
       </Box>
 
-      <Paper>
-        <Box sx={{ px: 2, py: 1 }}>
-          <Typography variant="body2" color="textSecondary">
-            Показаны записи{' '}
-            <b>
-              {from}–{to}
-            </b>{' '}
-            из <b>{totalCount}</b>.
-          </Typography>
-        </Box>
+      <Box sx={{ px: 2, py: 1 }}>
+        <Typography variant="body2" color="textSecondary">
+          Показаны записи{' '}
+          <b>
+            {from}–{to}
+          </b>{' '}
+          из <b>{totalCount}</b>.
+        </Typography>
+      </Box>
 
+      <Paper>
         <TableContainer sx={{ overflowX: 'auto' }}>
           <Table size="small" sx={{ border: 1, borderColor: 'divider' }}>
             <TableHead>
-              <TableRow
-                sx={{ bgcolor: 'grey.100', borderBottom: '2px solid', borderColor: 'primary.main' }}
-              >
+              <TableRow sx={{ bgcolor: 'grey.100' }}>
                 <TableCell
                   sx={{
                     ...cellSx,
                     fontWeight: 'bold',
                     color: 'primary.main',
+                    textDecoration: 'underline',
                     whiteSpace: 'nowrap',
                   }}
                 >
@@ -112,6 +111,7 @@ export const UsersTable = () => {
                     ...cellSx,
                     fontWeight: 'bold',
                     color: 'primary.main',
+                    textDecoration: 'underline',
                     whiteSpace: 'nowrap',
                   }}
                 >
@@ -128,6 +128,7 @@ export const UsersTable = () => {
                     ...cellSx,
                     fontWeight: 'bold',
                     color: 'primary.main',
+                    textDecoration: 'underline',
                     whiteSpace: 'nowrap',
                   }}
                 >
@@ -138,6 +139,7 @@ export const UsersTable = () => {
                     ...cellSx,
                     fontWeight: 'bold',
                     color: 'primary.main',
+                    textDecoration: 'underline',
                     whiteSpace: 'nowrap',
                   }}
                 >
@@ -154,6 +156,7 @@ export const UsersTable = () => {
                     ...cellSx,
                     fontWeight: 'bold',
                     color: 'primary.main',
+                    textDecoration: 'underline',
                     whiteSpace: 'nowrap',
                   }}
                 >
@@ -170,6 +173,7 @@ export const UsersTable = () => {
                     ...cellSx,
                     fontWeight: 'bold',
                     color: 'primary.main',
+                    textDecoration: 'underline',
                     whiteSpace: 'nowrap',
                   }}
                 >
@@ -186,6 +190,7 @@ export const UsersTable = () => {
                     ...cellSx,
                     fontWeight: 'bold',
                     color: 'primary.main',
+                    textDecoration: 'underline',
                     whiteSpace: 'nowrap',
                   }}
                 >
@@ -202,6 +207,7 @@ export const UsersTable = () => {
                     ...cellSx,
                     fontWeight: 'bold',
                     color: 'primary.main',
+                    textDecoration: 'underline',
                     whiteSpace: 'nowrap',
                   }}
                 >
@@ -295,7 +301,7 @@ export const UsersTable = () => {
                     <Avatar
                       photoId={user.photo_id}
                       fallback={user.username}
-                      sx={{ width: 50, height: 50 }}
+                      style={{ width: 50, height: 50 }}
                     />
                   </TableCell>
                   <TableCell sx={cellSx}>{user.username}</TableCell>
