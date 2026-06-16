@@ -1,22 +1,20 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { baseApi } from 'shared/api';
-import type { User, UserListParams, FoodItem } from './types';
+import { userResponseSchema, userListResponseSchema, foodListSchema } from './schema';
+import type { UserListParams } from './types';
 
 export const userApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getUsers: builder.query<{ data: User[]; headers: Record<string, string> }, UserListParams>({
-      query: (params) => ({
+    getUsers: builder.query({
+      query: (params: UserListParams) => ({
         url: '/v1/users',
         params,
       }),
-      transformResponse: (response: User[], meta: { response?: Response }) => ({
+      responseSchema: userListResponseSchema,
+      transformResponse: (response: unknown, meta: { response?: Response }) => ({
         data: response,
         headers: meta?.response?.headers ? Object.fromEntries(meta.response.headers.entries()) : {},
       }),
-      providesTags: (result) =>
+      providesTags: (result: { data: Array<{ id: number }> } | undefined) =>
         result?.data
           ? [
               ...result.data.map(({ id }) => ({ type: 'User' as const, id })),
@@ -25,42 +23,46 @@ export const userApi = baseApi.injectEndpoints({
           : [{ type: 'User', id: 'LIST' }],
     }),
 
-    getUserById: builder.query<User, number>({
-      query: (id) => `/v1/users/${id}`,
-      providesTags: (_result, _error, id) => [{ type: 'User', id }],
+    getUserById: builder.query({
+      query: (id: number) => `/v1/users/${id}`,
+      responseSchema: userResponseSchema,
+      providesTags: (_result: unknown, _error: unknown, id: number) => [{ type: 'User', id }],
     }),
 
-    getFoodList: builder.query<FoodItem, void>({
+    getFoodList: builder.query({
       query: () => '/v1/user/get-food-list',
+      responseSchema: foodListSchema,
     }),
 
-    createUser: builder.mutation<User, FormData>({
-      query: (body) => ({
+    createUser: builder.mutation({
+      query: (body: FormData) => ({
         url: '/v1/users',
         method: 'POST',
         body,
       }),
+      responseSchema: userResponseSchema,
       invalidatesTags: [{ type: 'User', id: 'LIST' }],
     }),
 
-    updateUser: builder.mutation<User, { id: number; body: FormData }>({
-      query: ({ id, body }) => ({
+    updateUser: builder.mutation({
+      query: ({ id, body }: { id: number; body: FormData }) => ({
         url: `/v1/users/${id}`,
         method: 'PUT',
         body,
       }),
-      invalidatesTags: (_result, _error, { id }) => [
+      responseSchema: userResponseSchema,
+      invalidatesTags: (_result: unknown, _error: unknown, { id }: { id: number }) => [
         { type: 'User', id },
         { type: 'User', id: 'LIST' },
       ],
     }),
 
-    deleteUser: builder.mutation<void, number>({
-      query: (id) => ({
+    deleteUser: builder.mutation({
+      query: (id: number) => ({
         url: `/v1/users/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: (_result, _error, id) => [
+      invalidatesTags: (_result: unknown, _error: unknown, id: number) => [
         { type: 'User', id },
         { type: 'User', id: 'LIST' },
       ],
