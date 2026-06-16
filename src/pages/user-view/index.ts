@@ -1,1 +1,1 @@
-// TODO: add exports
+export { default as UserViewPage } from './UserViewPage';
