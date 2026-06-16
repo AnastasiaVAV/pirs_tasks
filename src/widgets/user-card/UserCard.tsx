@@ -1,5 +1,14 @@
-import { Card, CardContent, CardActions, Typography, Stack, Chip } from '@mui/material';
-import { Pencil, Trash2, ArrowLeft } from 'lucide-react';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+  Paper,
+  Stack,
+  Typography,
+} from '@mui/material';
+import { Pencil, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, Button, Loader, ErrorAlert, DeleteConfirmDialog } from 'shared/ui';
 import { useGetUserByIdQuery } from 'entities/user';
@@ -21,7 +30,9 @@ export const UserCard = ({ userId }: UserCardProps) => {
     cancelDelete,
     userIdToDelete,
     isLoading: isDeleting,
-  } = useDeleteUser(() => navigate('/users'));
+  } = useDeleteUser(() => {
+    void navigate('/users');
+  });
 
   if (isLoading) return <Loader />;
 
@@ -45,53 +56,78 @@ export const UserCard = ({ userId }: UserCardProps) => {
     );
   }
 
-  const favoriteFood = foodOptions.filter((opt) => user.favorite_food_ids?.includes(opt.id));
+  const favoriteFood = foodOptions
+    .filter((opt) => user.favorite_food_ids?.includes(opt.id))
+    .map((opt) => opt.label)
+    .join(', ');
+
+  const cellSx = { border: 1, borderColor: 'divider', py: 1.5 };
 
   return (
     <>
-      <Card>
-        <CardContent>
-          <Stack spacing={2} alignItems="center">
-            <Avatar
-              photoId={user.photo_id}
-              fallback={user.username}
-              sx={{ width: 120, height: 120 }}
-            />
-            <Typography variant="h5">{user.username}</Typography>
-            <Typography color="textSecondary">{user.email}</Typography>
-            <Typography>Дата рождения: {formatDateToDisplay(user.birthdate)}</Typography>
+      <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
+        <Button
+          startIcon={<Pencil />}
+          variant="contained"
+          onClick={() => void navigate(`/users/${userId}/edit`)}
+        >
+          Изменить
+        </Button>
+        <Button
+          startIcon={<Trash2 />}
+          variant="outlined"
+          color="error"
+          onClick={() => requestDelete(userId)}
+        >
+          Удалить
+        </Button>
+      </Stack>
 
-            {favoriteFood.length > 0 && (
-              <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-                {favoriteFood.map((food) => (
-                  <Chip key={food.id} label={food.label} />
-                ))}
-              </Stack>
-            )}
-          </Stack>
-        </CardContent>
-
-        <CardActions sx={{ justifyContent: 'center', flexWrap: 'wrap', gap: 1 }}>
-          <Button startIcon={<ArrowLeft />} onClick={() => navigate('/users')}>
-            Назад
-          </Button>
-          <Button
-            startIcon={<Pencil />}
-            variant="contained"
-            onClick={() => navigate(`/users/${userId}/edit`)}
-          >
-            Редактировать
-          </Button>
-          <Button
-            startIcon={<Trash2 />}
-            variant="outlined"
-            color="error"
-            onClick={() => requestDelete(userId)}
-          >
-            Удалить
-          </Button>
-        </CardActions>
-      </Card>
+      <TableContainer component={Paper}>
+        <Table sx={{ border: 1, borderColor: 'divider' }}>
+          <TableBody>
+            <TableRow>
+              <TableCell sx={{ ...cellSx, fontWeight: 'bold', width: 200, bgcolor: 'grey.50' }}>
+                ID
+              </TableCell>
+              <TableCell sx={cellSx}>{user.id}</TableCell>
+              <TableCell sx={cellSx} rowSpan={6} align="center" verticalAlign="top">
+                <Avatar
+                  photoId={user.photo_id}
+                  fallback={user.username}
+                  sx={{ width: 120, height: 120 }}
+                />
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell sx={{ ...cellSx, fontWeight: 'bold', bgcolor: 'grey.50' }}>Имя</TableCell>
+              <TableCell sx={cellSx}>{user.username}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell sx={{ ...cellSx, fontWeight: 'bold', bgcolor: 'grey.50' }}>
+                Email
+              </TableCell>
+              <TableCell sx={cellSx}>{user.email}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell sx={{ ...cellSx, fontWeight: 'bold', bgcolor: 'grey.50' }}>
+                Дата рождения
+              </TableCell>
+              <TableCell sx={cellSx}>{formatDateToDisplay(user.birthdate)}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell sx={{ ...cellSx, fontWeight: 'bold', bgcolor: 'grey.50' }}>
+                Любимая еда
+              </TableCell>
+              <TableCell sx={cellSx}>{favoriteFood || '—'}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell sx={{ ...cellSx, fontWeight: 'bold', bgcolor: 'grey.50' }}>Фото</TableCell>
+              <TableCell sx={cellSx}>{user.photo_id ? 'Загружено' : 'Нет'}</TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </TableContainer>
 
       <DeleteConfirmDialog
         open={userIdToDelete !== null}
