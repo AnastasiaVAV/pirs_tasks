@@ -7,20 +7,22 @@ import {
   TableRow,
   Paper,
   IconButton,
-  TablePagination,
   Typography,
   Box,
+  Link,
 } from '@mui/material';
 import { Pencil, Trash2, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, Loader, ErrorAlert, DeleteConfirmDialog } from 'shared/ui';
 import { useUsersList } from 'features/fetch-users';
 import { useDeleteUser } from 'features/delete-user';
+import { useFoodList } from 'features/fetch-food-list';
 import { formatDateToDisplay } from 'shared/lib';
 
 export const UsersTable = () => {
   const navigate = useNavigate();
-  const { users, page, perPage, totalPages, goToPage, isLoading, isError, error } = useUsersList();
+  const { users, page, perPage, totalCount, isLoading, isError, error } = useUsersList();
+  const { options: foodOptions } = useFoodList();
   const {
     userIdToDelete,
     requestDelete,
@@ -28,6 +30,15 @@ export const UsersTable = () => {
     cancelDelete,
     isLoading: isDeleting,
   } = useDeleteUser();
+
+  const from = totalCount > 0 ? (page - 1) * perPage + 1 : 0;
+  const to = Math.min(page * perPage, totalCount);
+
+  const getFoodNames = (ids: number[]) =>
+    ids
+      .map((id) => foodOptions.find((opt) => opt.id === id)?.label)
+      .filter(Boolean)
+      .join(', ');
 
   if (isLoading) return <Loader />;
 
@@ -43,51 +54,72 @@ export const UsersTable = () => {
     );
   }
 
-  if (users.length === 0) {
-    return (
-      <Paper sx={{ p: 4, textAlign: 'center' }}>
-        <Typography color="textSecondary">Пользователи не найдены</Typography>
-      </Paper>
-    );
-  }
-
   return (
     <>
       <Paper>
+        <Box sx={{ px: 2, py: 1 }}>
+          <Typography variant="body2" color="textSecondary">
+            Показаны записи{' '}
+            <b>
+              {from}–{to}
+            </b>{' '}
+            из <b>{totalCount}</b>.
+          </Typography>
+        </Box>
+
         <TableContainer sx={{ overflowX: 'auto' }}>
-          <Table size="small">
+          <Table size="small" sx={{ border: 1, borderColor: 'divider' }}>
             <TableHead>
-              <TableRow>
-                <TableCell>Фото</TableCell>
-                <TableCell>Имя</TableCell>
-                <TableCell>Email</TableCell>
-                <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>
+              <TableRow sx={{ bgcolor: 'grey.100' }}>
+                <TableCell sx={{ border: 1, borderColor: 'divider', fontWeight: 'bold' }}>
+                  #
+                </TableCell>
+                <TableCell sx={{ border: 1, borderColor: 'divider', fontWeight: 'bold' }}>
+                  ID
+                </TableCell>
+                <TableCell sx={{ border: 1, borderColor: 'divider', fontWeight: 'bold' }}>
+                  Фото
+                </TableCell>
+                <TableCell sx={{ border: 1, borderColor: 'divider', fontWeight: 'bold' }}>
+                  Имя
+                </TableCell>
+                <TableCell sx={{ border: 1, borderColor: 'divider', fontWeight: 'bold' }}>
+                  Email
+                </TableCell>
+                <TableCell sx={{ border: 1, borderColor: 'divider', fontWeight: 'bold' }}>
                   Дата рождения
                 </TableCell>
-                <TableCell align="right">Действия</TableCell>
+                <TableCell sx={{ border: 1, borderColor: 'divider', fontWeight: 'bold' }}>
+                  Любимая еда
+                </TableCell>
+                <TableCell sx={{ border: 1, borderColor: 'divider', fontWeight: 'bold' }}>
+                  &nbsp;
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {users.map((user) => (
-                <TableRow key={user.id} hover>
-                  <TableCell>
+              {users.map((user, index) => (
+                <TableRow
+                  key={user.id}
+                  sx={{ bgcolor: index % 2 === 0 ? 'background.paper' : 'grey.50' }}
+                >
+                  <TableCell sx={{ border: 1, borderColor: 'divider' }}>{index + 1}</TableCell>
+                  <TableCell sx={{ border: 1, borderColor: 'divider' }}>{user.id}</TableCell>
+                  <TableCell sx={{ border: 1, borderColor: 'divider' }}>
                     <Avatar photoId={user.photo_id} fallback={user.username} />
                   </TableCell>
-                  <TableCell>
-                    <Typography
-                      component="span"
-                      sx={{ cursor: 'pointer', '&:hover': { textDecoration: 'underline' } }}
-                      onClick={() => void navigate(`/users/${user.id}`)}
-                    >
-                      {user.username}
-                    </Typography>
+                  <TableCell sx={{ border: 1, borderColor: 'divider' }}>{user.username}</TableCell>
+                  <TableCell sx={{ border: 1, borderColor: 'divider' }}>
+                    <Link href={`mailto:${user.email}`}>{user.email}</Link>
                   </TableCell>
-                  <TableCell>{user.email}</TableCell>
-                  <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>
+                  <TableCell sx={{ border: 1, borderColor: 'divider' }}>
                     {formatDateToDisplay(user.birthdate)}
                   </TableCell>
-                  <TableCell align="right">
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 0.5 }}>
+                  <TableCell sx={{ border: 1, borderColor: 'divider' }}>
+                    {getFoodNames(user.favorite_food_ids) || '—'}
+                  </TableCell>
+                  <TableCell sx={{ border: 1, borderColor: 'divider' }}>
+                    <Box sx={{ display: 'flex', gap: 0.5 }}>
                       <IconButton
                         size="small"
                         onClick={() => void navigate(`/users/${user.id}`)}
@@ -98,7 +130,7 @@ export const UsersTable = () => {
                       <IconButton
                         size="small"
                         onClick={() => void navigate(`/users/${user.id}/edit`)}
-                        title="Редактирование"
+                        title="Редактировать"
                       >
                         <Pencil size={16} />
                       </IconButton>
@@ -114,19 +146,24 @@ export const UsersTable = () => {
                   </TableCell>
                 </TableRow>
               ))}
+              {users.length === 0 && (
+                <TableRow>
+                  <TableCell
+                    colSpan={8}
+                    sx={{
+                      textAlign: 'center',
+                      py: 4,
+                      border: 1,
+                      borderColor: 'divider',
+                    }}
+                  >
+                    Нет данных
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </TableContainer>
-
-        <TablePagination
-          component="div"
-          count={totalPages * perPage}
-          page={page - 1}
-          onPageChange={(_, newPage) => goToPage(newPage + 1)}
-          rowsPerPage={perPage}
-          rowsPerPageOptions={[perPage]}
-          labelDisplayedRows={({ from, to }) => `${from}–${to}`}
-        />
       </Paper>
 
       <DeleteConfirmDialog
