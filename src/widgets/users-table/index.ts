@@ -1,1 +1,1 @@
-// TODO: add exports
+export { UsersTable } from './UsersTable';
