@@ -1,7 +1,7 @@
 import { Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { Controller } from 'react-hook-form';
-import { Input, Button, DatePicker, Select } from 'shared/ui';
+import { Input, Button, DatePicker, Select, ErrorAlert } from 'shared/ui';
 import { useCreateUserForm } from 'features/create-user';
 import { useUpdateUserForm } from 'features/update-user';
 import { useFoodList } from 'features/fetch-food-list';
@@ -29,6 +29,13 @@ export const UserForm = (props: UserFormProps) => {
         <Typography variant="h5">
           {isUpdate ? 'Редактирование пользователя' : 'Создание пользователя'}
         </Typography>
+
+        {isUpdate && updateForm.error && (
+          <ErrorAlert message="Произошла ошибка при сохранении. Попробуйте позже." />
+        )}
+        {!isUpdate && createForm.error && (
+          <ErrorAlert message="Произошла ошибка при создании. Попробуйте позже." />
+        )}
 
         <Controller
           name="username"

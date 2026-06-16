@@ -15,3 +15,9 @@ export type { AvatarProps } from './Avatar/Avatar';
 
 export { Loader } from './Loader/Loader';
 export type { LoaderProps } from './Loader/Loader';
+
+export { ErrorAlert } from './ErrorAlert/ErrorAlert';
+export type { ErrorAlertProps } from './ErrorAlert/ErrorAlert';
+
+export { DeleteConfirmDialog } from './DeleteConfirmDialog/DeleteConfirmDialog';
+export type { DeleteConfirmDialogProps } from './DeleteConfirmDialog/DeleteConfirmDialog';

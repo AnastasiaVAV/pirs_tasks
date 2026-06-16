@@ -1,15 +1,17 @@
 import { Container } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { UserCard } from 'widgets/user-card';
-import { Loader } from 'shared/ui';
+import { ErrorAlert } from 'shared/ui';
 
 const UserViewPage = () => {
   const { id } = useParams<{ id: string }>();
 
-  if (!id) return <Loader />;
+  if (!id) {
+    return <ErrorAlert title="Ошибка" message="ID пользователя не указан." />;
+  }
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="sm" sx={{ py: 3 }}>
       <UserCard userId={Number(id)} />
     </Container>
   );
