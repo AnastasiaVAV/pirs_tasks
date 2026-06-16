@@ -22,13 +22,13 @@ export const Select = <T extends SelectOption>({
   ...props
 }: SelectProps<T>) => {
   return (
-    <Autocomplete
+    <Autocomplete<T, true, false, false>
       {...props}
       multiple
       getOptionLabel={(option) => option.label}
       isOptionEqualToValue={(option, value) => option.id === value.id}
-      renderTags={(value, getTagProps) =>
-        value.map((option, index) => (
+      renderTags={(value: T[], getTagProps: (params: { index: number }) => object) =>
+        value.map((option: T, index: number) => (
           <Chip {...getTagProps({ index })} key={option.id} label={option.label} size="small" />
         ))
       }
