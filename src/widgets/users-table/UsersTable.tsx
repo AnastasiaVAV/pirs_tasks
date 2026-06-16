@@ -11,6 +11,7 @@ import {
   Box,
   Link,
   TextField,
+  TableSortLabel,
 } from '@mui/material';
 import { Pencil, Trash2, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -22,8 +23,19 @@ import { formatDateToDisplay } from 'shared/lib';
 
 export const UsersTable = () => {
   const navigate = useNavigate();
-  const { users, page, perPage, totalCount, filters, setFilter, isLoading, isError, error } =
-    useUsersList();
+  const {
+    users,
+    page,
+    perPage,
+    totalCount,
+    filters,
+    setFilter,
+    toggleSort,
+    getSortDirection,
+    isLoading,
+    isError,
+    error,
+  } = useUsersList();
   const { options: foodOptions } = useFoodList();
   const {
     userIdToDelete,
@@ -76,12 +88,52 @@ export const UsersTable = () => {
             <TableHead>
               <TableRow sx={{ bgcolor: 'grey.100' }}>
                 <TableCell sx={{ ...cellSx, fontWeight: 'bold' }}>#</TableCell>
-                <TableCell sx={{ ...cellSx, fontWeight: 'bold' }}>ID</TableCell>
+                <TableCell sx={{ ...cellSx, fontWeight: 'bold' }}>
+                  <TableSortLabel
+                    active={getSortDirection('id') !== false}
+                    direction={getSortDirection('id') || 'asc'}
+                    onClick={() => toggleSort('id')}
+                  >
+                    ID
+                  </TableSortLabel>
+                </TableCell>
                 <TableCell sx={{ ...cellSx, fontWeight: 'bold' }}>Фото</TableCell>
-                <TableCell sx={{ ...cellSx, fontWeight: 'bold' }}>Имя</TableCell>
-                <TableCell sx={{ ...cellSx, fontWeight: 'bold' }}>Email</TableCell>
-                <TableCell sx={{ ...cellSx, fontWeight: 'bold' }}>Дата рождения</TableCell>
-                <TableCell sx={{ ...cellSx, fontWeight: 'bold' }}>Любимая еда</TableCell>
+                <TableCell sx={{ ...cellSx, fontWeight: 'bold' }}>
+                  <TableSortLabel
+                    active={getSortDirection('username') !== false}
+                    direction={getSortDirection('username') || 'asc'}
+                    onClick={() => toggleSort('username')}
+                  >
+                    Имя
+                  </TableSortLabel>
+                </TableCell>
+                <TableCell sx={{ ...cellSx, fontWeight: 'bold' }}>
+                  <TableSortLabel
+                    active={getSortDirection('email') !== false}
+                    direction={getSortDirection('email') || 'asc'}
+                    onClick={() => toggleSort('email')}
+                  >
+                    Email
+                  </TableSortLabel>
+                </TableCell>
+                <TableCell sx={{ ...cellSx, fontWeight: 'bold' }}>
+                  <TableSortLabel
+                    active={getSortDirection('birthdate') !== false}
+                    direction={getSortDirection('birthdate') || 'asc'}
+                    onClick={() => toggleSort('birthdate')}
+                  >
+                    Дата рождения
+                  </TableSortLabel>
+                </TableCell>
+                <TableCell sx={{ ...cellSx, fontWeight: 'bold' }}>
+                  <TableSortLabel
+                    active={getSortDirection('favorite_food_ids') !== false}
+                    direction={getSortDirection('favorite_food_ids') || 'asc'}
+                    onClick={() => toggleSort('favorite_food_ids')}
+                  >
+                    Любимая еда
+                  </TableSortLabel>
+                </TableCell>
                 <TableCell sx={{ ...cellSx, fontWeight: 'bold' }}>&nbsp;</TableCell>
               </TableRow>
               <TableRow>

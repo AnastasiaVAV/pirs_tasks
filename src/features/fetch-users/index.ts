@@ -19,10 +19,13 @@ const DEFAULT_FILTERS: UserFilters = {
   birthdateEnd: '',
 };
 
+export type SortField = 'id' | 'username' | 'email' | 'birthdate' | 'favorite_food_ids';
+
 export const useUsersList = () => {
   const [page, setPage] = useState(DEFAULT_PAGE);
   const [perPage] = useState(DEFAULT_PER_PAGE);
   const [filters, setFilters] = useState<UserFilters>(DEFAULT_FILTERS);
+  const [sort, setSort] = useState<string>('');
 
   const params: UserListParams = {
     page,
@@ -33,6 +36,7 @@ export const useUsersList = () => {
   if (filters.email) params['UserSearch[email]'] = filters.email;
   if (filters.birthdateStart) params['UserSearch[birthdateStart]'] = filters.birthdateStart;
   if (filters.birthdateEnd) params['UserSearch[birthdateEnd]'] = filters.birthdateEnd;
+  if (sort) params.sort = sort;
 
   const { data, ...rest } = useGetUsersQuery(params);
 
@@ -53,6 +57,24 @@ export const useUsersList = () => {
     setPage(DEFAULT_PAGE);
   }, []);
 
+  const toggleSort = useCallback((field: SortField) => {
+    setSort((prev) => {
+      if (prev === field) return `-${field}`;
+      if (prev === `-${field}`) return '';
+      return field;
+    });
+    setPage(DEFAULT_PAGE);
+  }, []);
+
+  const getSortDirection = useCallback(
+    (field: SortField): 'asc' | 'desc' | false => {
+      if (sort === field) return 'asc';
+      if (sort === `-${field}`) return 'desc';
+      return false;
+    },
+    [sort]
+  );
+
   return {
     users: data?.data ?? [],
     page,
@@ -60,9 +82,12 @@ export const useUsersList = () => {
     totalPages,
     totalCount,
     filters,
+    sort,
     goToPage,
     setFilter,
     resetFilters,
+    toggleSort,
+    getSortDirection,
     ...rest,
   };
 };
