@@ -10,6 +10,7 @@ import {
   Typography,
   Box,
   Link,
+  TextField,
 } from '@mui/material';
 import { Pencil, Trash2, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -21,7 +22,8 @@ import { formatDateToDisplay } from 'shared/lib';
 
 export const UsersTable = () => {
   const navigate = useNavigate();
-  const { users, page, perPage, totalCount, isLoading, isError, error } = useUsersList();
+  const { users, page, perPage, totalCount, filters, setFilter, isLoading, isError, error } =
+    useUsersList();
   const { options: foodOptions } = useFoodList();
   const {
     userIdToDelete,
@@ -39,6 +41,8 @@ export const UsersTable = () => {
       .map((id) => foodOptions.find((opt) => opt.id === id)?.label)
       .filter(Boolean)
       .join(', ');
+
+  const cellSx = { border: 1, borderColor: 'divider' };
 
   if (isLoading) return <Loader />;
 
@@ -71,30 +75,57 @@ export const UsersTable = () => {
           <Table size="small" sx={{ border: 1, borderColor: 'divider' }}>
             <TableHead>
               <TableRow sx={{ bgcolor: 'grey.100' }}>
-                <TableCell sx={{ border: 1, borderColor: 'divider', fontWeight: 'bold' }}>
-                  #
+                <TableCell sx={{ ...cellSx, fontWeight: 'bold' }}>#</TableCell>
+                <TableCell sx={{ ...cellSx, fontWeight: 'bold' }}>ID</TableCell>
+                <TableCell sx={{ ...cellSx, fontWeight: 'bold' }}>Фото</TableCell>
+                <TableCell sx={{ ...cellSx, fontWeight: 'bold' }}>Имя</TableCell>
+                <TableCell sx={{ ...cellSx, fontWeight: 'bold' }}>Email</TableCell>
+                <TableCell sx={{ ...cellSx, fontWeight: 'bold' }}>Дата рождения</TableCell>
+                <TableCell sx={{ ...cellSx, fontWeight: 'bold' }}>Любимая еда</TableCell>
+                <TableCell sx={{ ...cellSx, fontWeight: 'bold' }}>&nbsp;</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell sx={cellSx} />
+                <TableCell sx={cellSx} />
+                <TableCell sx={cellSx} />
+                <TableCell sx={cellSx}>
+                  <TextField
+                    size="small"
+                    fullWidth
+                    placeholder="Фильтр..."
+                    value={filters.username}
+                    onChange={(e) => setFilter('username', e.target.value)}
+                  />
                 </TableCell>
-                <TableCell sx={{ border: 1, borderColor: 'divider', fontWeight: 'bold' }}>
-                  ID
+                <TableCell sx={cellSx}>
+                  <TextField
+                    size="small"
+                    fullWidth
+                    placeholder="Фильтр..."
+                    value={filters.email}
+                    onChange={(e) => setFilter('email', e.target.value)}
+                  />
                 </TableCell>
-                <TableCell sx={{ border: 1, borderColor: 'divider', fontWeight: 'bold' }}>
-                  Фото
+                <TableCell sx={cellSx}>
+                  <Box sx={{ display: 'flex', gap: 0.5 }}>
+                    <TextField
+                      size="small"
+                      type="date"
+                      sx={{ flex: 1 }}
+                      value={filters.birthdateStart}
+                      onChange={(e) => setFilter('birthdateStart', e.target.value)}
+                    />
+                    <TextField
+                      size="small"
+                      type="date"
+                      sx={{ flex: 1 }}
+                      value={filters.birthdateEnd}
+                      onChange={(e) => setFilter('birthdateEnd', e.target.value)}
+                    />
+                  </Box>
                 </TableCell>
-                <TableCell sx={{ border: 1, borderColor: 'divider', fontWeight: 'bold' }}>
-                  Имя
-                </TableCell>
-                <TableCell sx={{ border: 1, borderColor: 'divider', fontWeight: 'bold' }}>
-                  Email
-                </TableCell>
-                <TableCell sx={{ border: 1, borderColor: 'divider', fontWeight: 'bold' }}>
-                  Дата рождения
-                </TableCell>
-                <TableCell sx={{ border: 1, borderColor: 'divider', fontWeight: 'bold' }}>
-                  Любимая еда
-                </TableCell>
-                <TableCell sx={{ border: 1, borderColor: 'divider', fontWeight: 'bold' }}>
-                  &nbsp;
-                </TableCell>
+                <TableCell sx={cellSx} />
+                <TableCell sx={cellSx} />
               </TableRow>
             </TableHead>
             <TableBody>
@@ -103,22 +134,18 @@ export const UsersTable = () => {
                   key={user.id}
                   sx={{ bgcolor: index % 2 === 0 ? 'background.paper' : 'rgba(0, 0, 0, 0.05)' }}
                 >
-                  <TableCell sx={{ border: 1, borderColor: 'divider' }}>{index + 1}</TableCell>
-                  <TableCell sx={{ border: 1, borderColor: 'divider' }}>{user.id}</TableCell>
-                  <TableCell sx={{ border: 1, borderColor: 'divider' }}>
+                  <TableCell sx={cellSx}>{index + 1}</TableCell>
+                  <TableCell sx={cellSx}>{user.id}</TableCell>
+                  <TableCell sx={cellSx}>
                     <Avatar photoId={user.photo_id} fallback={user.username} />
                   </TableCell>
-                  <TableCell sx={{ border: 1, borderColor: 'divider' }}>{user.username}</TableCell>
-                  <TableCell sx={{ border: 1, borderColor: 'divider' }}>
+                  <TableCell sx={cellSx}>{user.username}</TableCell>
+                  <TableCell sx={cellSx}>
                     <Link href={`mailto:${user.email}`}>{user.email}</Link>
                   </TableCell>
-                  <TableCell sx={{ border: 1, borderColor: 'divider' }}>
-                    {formatDateToDisplay(user.birthdate)}
-                  </TableCell>
-                  <TableCell sx={{ border: 1, borderColor: 'divider' }}>
-                    {getFoodNames(user.favorite_food_ids) || '—'}
-                  </TableCell>
-                  <TableCell sx={{ border: 1, borderColor: 'divider' }}>
+                  <TableCell sx={cellSx}>{formatDateToDisplay(user.birthdate)}</TableCell>
+                  <TableCell sx={cellSx}>{getFoodNames(user.favorite_food_ids) || '—'}</TableCell>
+                  <TableCell sx={cellSx}>
                     <Box sx={{ display: 'flex', gap: 0.5 }}>
                       <IconButton
                         size="small"
@@ -150,12 +177,7 @@ export const UsersTable = () => {
                 <TableRow>
                   <TableCell
                     colSpan={8}
-                    sx={{
-                      textAlign: 'center',
-                      py: 4,
-                      border: 1,
-                      borderColor: 'divider',
-                    }}
+                    sx={{ textAlign: 'center', py: 4, border: 1, borderColor: 'divider' }}
                   >
                     Нет данных
                   </TableCell>
