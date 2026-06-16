@@ -28,6 +28,7 @@ export interface UserListParams {
   'UserSearch[email]'?: string;
   'UserSearch[birthdateStart]'?: string;
   'UserSearch[birthdateEnd]'?: string;
+  'UserSearch[foodIds]'?: number[];
 }
 
 export type FoodItem = Record<string, string>;

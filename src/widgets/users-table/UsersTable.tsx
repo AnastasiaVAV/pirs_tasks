@@ -12,6 +12,8 @@ import {
   Link,
   TextField,
   TableSortLabel,
+  Select,
+  MenuItem,
 } from '@mui/material';
 import { Pencil, Trash2, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -138,7 +140,15 @@ export const UsersTable = () => {
               </TableRow>
               <TableRow>
                 <TableCell sx={cellSx} />
-                <TableCell sx={cellSx} />
+                <TableCell sx={cellSx}>
+                  <TextField
+                    size="small"
+                    fullWidth
+                    placeholder="Фильтр..."
+                    value={filters.id}
+                    onChange={(e) => setFilter('id', e.target.value)}
+                  />
+                </TableCell>
                 <TableCell sx={cellSx} />
                 <TableCell sx={cellSx}>
                   <TextField
@@ -176,7 +186,30 @@ export const UsersTable = () => {
                     />
                   </Box>
                 </TableCell>
-                <TableCell sx={cellSx} />
+                <TableCell sx={cellSx}>
+                  <Select
+                    size="small"
+                    multiple
+                    fullWidth
+                    displayEmpty
+                    value={filters.foodIds}
+                    onChange={(e) => setFilter('foodIds', e.target.value as number[])}
+                    renderValue={(selected) =>
+                      selected.length === 0
+                        ? ''
+                        : foodOptions
+                            .filter((opt) => selected.includes(opt.id))
+                            .map((opt) => opt.label)
+                            .join(', ')
+                    }
+                  >
+                    {foodOptions.map((opt) => (
+                      <MenuItem key={opt.id} value={opt.id}>
+                        {opt.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </TableCell>
                 <TableCell sx={cellSx} />
               </TableRow>
             </TableHead>

@@ -6,17 +6,21 @@ const DEFAULT_PAGE = 1;
 const DEFAULT_PER_PAGE = 10;
 
 export type UserFilters = {
+  id: string;
   username: string;
   email: string;
   birthdateStart: string;
   birthdateEnd: string;
+  foodIds: number[];
 };
 
 const DEFAULT_FILTERS: UserFilters = {
+  id: '',
   username: '',
   email: '',
   birthdateStart: '',
   birthdateEnd: '',
+  foodIds: [],
 };
 
 export type SortField = 'id' | 'username' | 'email' | 'birthdate' | 'favorite_food_ids';
@@ -32,10 +36,12 @@ export const useUsersList = () => {
     'per-page': perPage,
   };
 
+  if (filters.id) params['UserSearch[id]'] = filters.id;
   if (filters.username) params['UserSearch[username]'] = filters.username;
   if (filters.email) params['UserSearch[email]'] = filters.email;
   if (filters.birthdateStart) params['UserSearch[birthdateStart]'] = filters.birthdateStart;
   if (filters.birthdateEnd) params['UserSearch[birthdateEnd]'] = filters.birthdateEnd;
+  if (filters.foodIds.length > 0) params['UserSearch[foodIds]'] = filters.foodIds;
   if (sort) params.sort = sort;
 
   const { data, ...rest } = useGetUsersQuery(params);
