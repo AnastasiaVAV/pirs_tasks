@@ -91,8 +91,8 @@ export const UsersTable = () => {
       </Box>
 
       <Paper>
-        <TableContainer sx={{ overflowX: 'auto' }}>
-          <Table size="small" sx={{ border: 1, borderColor: 'divider' }}>
+        <TableContainer>
+          <Table sx={{ border: 1, borderColor: 'divider', width: 'auto' }}>
             <TableHead>
               <TableRow sx={{ bgcolor: 'grey.100' }}>
                 <TableCell
