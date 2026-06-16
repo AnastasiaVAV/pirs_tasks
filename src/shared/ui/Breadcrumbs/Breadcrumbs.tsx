@@ -13,7 +13,7 @@ export type BreadcrumbsProps = {
 export const Breadcrumbs = ({ items }: BreadcrumbsProps) => {
   return (
     <MuiBreadcrumbs sx={{ my: 2 }}>
-      <MuiLink component={Link} to="/users" underline="hover" color="inherit">
+      <MuiLink component={Link} to="/users" underline="hover" color="primary">
         Главная
       </MuiLink>
       {items.map((item, index) => {
