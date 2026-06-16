@@ -301,7 +301,7 @@ export const UsersTable = () => {
                     <Avatar
                       photoId={user.photo_id}
                       fallback={user.username}
-                      style={{ width: 150, height: 150 }}
+                      style={{ width: 50, height: 50 }}
                     />
                   </TableCell>
                   <TableCell sx={cellSx}>{user.username}</TableCell>
