@@ -17,7 +17,7 @@ import {
 } from '@mui/material';
 import { Pencil, Trash2, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { Avatar, Loader, ErrorAlert, DeleteConfirmDialog } from 'shared/ui';
+import { Avatar, Button, Loader, ErrorAlert, DeleteConfirmDialog } from 'shared/ui';
 import { useUsersList } from 'features/fetch-users';
 import { useDeleteUser } from 'features/delete-user';
 import { useFoodList } from 'features/fetch-food-list';
@@ -74,6 +74,12 @@ export const UsersTable = () => {
 
   return (
     <>
+      <Box sx={{ mb: 2 }}>
+        <Button variant="contained" color="success" onClick={() => void navigate('/users/create')}>
+          Добавить пользователя
+        </Button>
+      </Box>
+
       <Paper>
         <Box sx={{ px: 2, py: 1 }}>
           <Typography variant="body2" color="textSecondary">
@@ -88,9 +94,27 @@ export const UsersTable = () => {
         <TableContainer sx={{ overflowX: 'auto' }}>
           <Table size="small" sx={{ border: 1, borderColor: 'divider' }}>
             <TableHead>
-              <TableRow sx={{ bgcolor: 'grey.100' }}>
-                <TableCell sx={{ ...cellSx, fontWeight: 'bold' }}>#</TableCell>
-                <TableCell sx={{ ...cellSx, fontWeight: 'bold' }}>
+              <TableRow
+                sx={{ bgcolor: 'grey.100', borderBottom: '2px solid', borderColor: 'primary.main' }}
+              >
+                <TableCell
+                  sx={{
+                    ...cellSx,
+                    fontWeight: 'bold',
+                    color: 'primary.main',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  #
+                </TableCell>
+                <TableCell
+                  sx={{
+                    ...cellSx,
+                    fontWeight: 'bold',
+                    color: 'primary.main',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
                   <TableSortLabel
                     active={getSortDirection('id') !== false}
                     direction={getSortDirection('id') || 'asc'}
@@ -99,8 +123,24 @@ export const UsersTable = () => {
                     ID
                   </TableSortLabel>
                 </TableCell>
-                <TableCell sx={{ ...cellSx, fontWeight: 'bold' }}>Фото</TableCell>
-                <TableCell sx={{ ...cellSx, fontWeight: 'bold' }}>
+                <TableCell
+                  sx={{
+                    ...cellSx,
+                    fontWeight: 'bold',
+                    color: 'primary.main',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  Фото
+                </TableCell>
+                <TableCell
+                  sx={{
+                    ...cellSx,
+                    fontWeight: 'bold',
+                    color: 'primary.main',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
                   <TableSortLabel
                     active={getSortDirection('username') !== false}
                     direction={getSortDirection('username') || 'asc'}
@@ -109,7 +149,14 @@ export const UsersTable = () => {
                     Имя
                   </TableSortLabel>
                 </TableCell>
-                <TableCell sx={{ ...cellSx, fontWeight: 'bold' }}>
+                <TableCell
+                  sx={{
+                    ...cellSx,
+                    fontWeight: 'bold',
+                    color: 'primary.main',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
                   <TableSortLabel
                     active={getSortDirection('email') !== false}
                     direction={getSortDirection('email') || 'asc'}
@@ -118,7 +165,14 @@ export const UsersTable = () => {
                     Email
                   </TableSortLabel>
                 </TableCell>
-                <TableCell sx={{ ...cellSx, fontWeight: 'bold' }}>
+                <TableCell
+                  sx={{
+                    ...cellSx,
+                    fontWeight: 'bold',
+                    color: 'primary.main',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
                   <TableSortLabel
                     active={getSortDirection('birthdate') !== false}
                     direction={getSortDirection('birthdate') || 'asc'}
@@ -127,7 +181,14 @@ export const UsersTable = () => {
                     Дата рождения
                   </TableSortLabel>
                 </TableCell>
-                <TableCell sx={{ ...cellSx, fontWeight: 'bold' }}>
+                <TableCell
+                  sx={{
+                    ...cellSx,
+                    fontWeight: 'bold',
+                    color: 'primary.main',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
                   <TableSortLabel
                     active={getSortDirection('favorite_food_ids') !== false}
                     direction={getSortDirection('favorite_food_ids') || 'asc'}
@@ -136,7 +197,16 @@ export const UsersTable = () => {
                     Любимая еда
                   </TableSortLabel>
                 </TableCell>
-                <TableCell sx={{ ...cellSx, fontWeight: 'bold' }}>&nbsp;</TableCell>
+                <TableCell
+                  sx={{
+                    ...cellSx,
+                    fontWeight: 'bold',
+                    color: 'primary.main',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  &nbsp;
+                </TableCell>
               </TableRow>
               <TableRow>
                 <TableCell sx={cellSx} />
@@ -222,7 +292,11 @@ export const UsersTable = () => {
                   <TableCell sx={cellSx}>{index + 1}</TableCell>
                   <TableCell sx={cellSx}>{user.id}</TableCell>
                   <TableCell sx={cellSx}>
-                    <Avatar photoId={user.photo_id} fallback={user.username} />
+                    <Avatar
+                      photoId={user.photo_id}
+                      fallback={user.username}
+                      sx={{ width: 50, height: 50 }}
+                    />
                   </TableCell>
                   <TableCell sx={cellSx}>{user.username}</TableCell>
                   <TableCell sx={cellSx}>
