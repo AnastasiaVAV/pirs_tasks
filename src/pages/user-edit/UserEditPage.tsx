@@ -2,7 +2,7 @@ import { Container } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { UserForm } from 'widgets/user-form';
 import { useGetUserByIdQuery } from 'entities/user';
-import { Loader, ErrorAlert } from 'shared/ui';
+import { Loader, ErrorAlert, Breadcrumbs } from 'shared/ui';
 
 const UserEditPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -21,6 +21,9 @@ const UserEditPage = () => {
 
   return (
     <Container maxWidth="sm" sx={{ py: 3 }}>
+      <Breadcrumbs
+        items={[{ label: 'Пользователи', to: '/users' }, { label: `Редактирование #${id}` }]}
+      />
       <UserForm mode="update" user={user} />
     </Container>
   );

@@ -21,3 +21,6 @@ export type { ErrorAlertProps } from './ErrorAlert/ErrorAlert';
 
 export { DeleteConfirmDialog } from './DeleteConfirmDialog/DeleteConfirmDialog';
 export type { DeleteConfirmDialogProps } from './DeleteConfirmDialog/DeleteConfirmDialog';
+
+export { Breadcrumbs } from './Breadcrumbs/Breadcrumbs';
+export type { BreadcrumbsProps, BreadcrumbItem } from './Breadcrumbs/Breadcrumbs';
