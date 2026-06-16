@@ -4,7 +4,7 @@ import { Breadcrumbs } from 'shared/ui';
 
 const UsersListPage = () => {
   return (
-    <Container maxWidth="lg" sx={{ py: 3 }}>
+    <Container sx={{ py: 3 }}>
       <Breadcrumbs items={[{ label: 'Пользователи' }]} />
       <Typography variant="h4" mb={3}>
         Пользователи

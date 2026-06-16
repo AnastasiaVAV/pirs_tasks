@@ -90,7 +90,7 @@ export const UsersTable = () => {
         </Typography>
       </Box>
 
-      <Paper>
+      <Paper sx={{ overflow: 'visible' }}>
         <TableContainer>
           <Table sx={{ border: 1, borderColor: 'divider', width: 'auto' }}>
             <TableHead>
