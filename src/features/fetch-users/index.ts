@@ -16,7 +16,7 @@ export const useUsersList = () => {
 
   const { data, ...rest } = useGetUsersQuery(params);
 
-  const totalPages = Number(rest.currentData?.headers?.['x-total-count'] ?? 0) || 1;
+  const totalPages = Number(rest.currentData?.headers?.['x-pagination-page-count'] ?? 0) || 1;
 
   const goToPage = useCallback((newPage: number) => {
     setPage(newPage);

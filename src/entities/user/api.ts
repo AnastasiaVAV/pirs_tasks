@@ -5,13 +5,25 @@ export const userApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getUsers: builder.query({
       query: (params: UserListParams) => ({
-        url: '/v1/users',
+        url: '/v1/user/index',
         params,
       }),
-      transformResponse: (response: unknown, meta: { response?: Response }) => ({
-        data: response,
-        headers: meta?.response?.headers ? Object.fromEntries(meta.response.headers.entries()) : {},
-      }),
+      transformResponse: (response: unknown, meta: { response?: Response }) => {
+        const users = Array.isArray(response)
+          ? response.map((u: Record<string, unknown>) => ({
+              ...u,
+              favorite_food_ids: Array.isArray(u.favorite_food_ids)
+                ? u.favorite_food_ids.map(Number)
+                : [],
+            }))
+          : [];
+        return {
+          data: users,
+          headers: meta?.response?.headers
+            ? Object.fromEntries(meta.response.headers.entries())
+            : {},
+        };
+      },
       providesTags: (result: { data: Array<{ id: number }> } | undefined) =>
         result?.data
           ? [
@@ -22,7 +34,16 @@ export const userApi = baseApi.injectEndpoints({
     }),
 
     getUserById: builder.query({
-      query: (id: number) => `/v1/users/${id}`,
+      query: (id: number) => ({ url: '/v1/user/view', params: { id } }),
+      transformResponse: (response: unknown) => {
+        const u = response as Record<string, unknown>;
+        return {
+          ...u,
+          favorite_food_ids: Array.isArray(u.favorite_food_ids)
+            ? u.favorite_food_ids.map(Number)
+            : [],
+        };
+      },
       providesTags: (_result: unknown, _error: unknown, id: number) => [{ type: 'User', id }],
     }),
 
@@ -32,7 +53,7 @@ export const userApi = baseApi.injectEndpoints({
 
     createUser: builder.mutation({
       query: (body: FormData) => ({
-        url: '/v1/users',
+        url: '/v1/user/create',
         method: 'POST',
         body,
       }),
@@ -41,7 +62,8 @@ export const userApi = baseApi.injectEndpoints({
 
     updateUser: builder.mutation({
       query: ({ id, body }: { id: number; body: FormData }) => ({
-        url: `/v1/users/${id}`,
+        url: '/v1/user/update',
+        params: { id },
         method: 'PUT',
         body,
       }),
@@ -53,7 +75,8 @@ export const userApi = baseApi.injectEndpoints({
 
     deleteUser: builder.mutation({
       query: (id: number) => ({
-        url: `/v1/users/${id}`,
+        url: '/v1/user/delete',
+        params: { id },
         method: 'DELETE',
       }),
       invalidatesTags: (_result: unknown, _error: unknown, id: number) => [
