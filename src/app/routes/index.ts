@@ -1,1 +1,1 @@
-// TODO: add exports
+export { AppRoutes } from './AppRoutes';

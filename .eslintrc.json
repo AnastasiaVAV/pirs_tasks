@@ -54,7 +54,8 @@
         "**/entities/**/api.ts",
         "**/features/**/*.ts",
         "**/widgets/**/*.tsx",
-        "**/pages/**/*.tsx"
+        "**/pages/**/*.tsx",
+        "**/app/**/*.tsx"
       ],
       "rules": {
         "@typescript-eslint/no-unsafe-assignment": "off",

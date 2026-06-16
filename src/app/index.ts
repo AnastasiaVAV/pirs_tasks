@@ -1,1 +1,1 @@
-// TODO: add exports
+export { App } from '../App';
