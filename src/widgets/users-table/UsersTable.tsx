@@ -101,7 +101,7 @@ export const UsersTable = () => {
               {users.map((user, index) => (
                 <TableRow
                   key={user.id}
-                  sx={{ bgcolor: index % 2 === 0 ? 'background.paper' : 'grey.50' }}
+                  sx={{ bgcolor: index % 2 === 0 ? 'background.paper' : 'rgba(0, 0, 0, 0.05)' }}
                 >
                   <TableCell sx={{ border: 1, borderColor: 'divider' }}>{index + 1}</TableCell>
                   <TableCell sx={{ border: 1, borderColor: 'divider' }}>{user.id}</TableCell>
