@@ -1,5 +1,4 @@
 import { baseApi } from 'shared/api';
-import { userResponseSchema, userListResponseSchema, foodListSchema } from './schema';
 import type { UserListParams } from './types';
 
 export const userApi = baseApi.injectEndpoints({
@@ -9,7 +8,6 @@ export const userApi = baseApi.injectEndpoints({
         url: '/v1/users',
         params,
       }),
-      responseSchema: userListResponseSchema,
       transformResponse: (response: unknown, meta: { response?: Response }) => ({
         data: response,
         headers: meta?.response?.headers ? Object.fromEntries(meta.response.headers.entries()) : {},
@@ -25,13 +23,11 @@ export const userApi = baseApi.injectEndpoints({
 
     getUserById: builder.query({
       query: (id: number) => `/v1/users/${id}`,
-      responseSchema: userResponseSchema,
       providesTags: (_result: unknown, _error: unknown, id: number) => [{ type: 'User', id }],
     }),
 
     getFoodList: builder.query({
       query: () => '/v1/user/get-food-list',
-      responseSchema: foodListSchema,
     }),
 
     createUser: builder.mutation({
@@ -40,7 +36,6 @@ export const userApi = baseApi.injectEndpoints({
         method: 'POST',
         body,
       }),
-      responseSchema: userResponseSchema,
       invalidatesTags: [{ type: 'User', id: 'LIST' }],
     }),
 
@@ -50,7 +45,6 @@ export const userApi = baseApi.injectEndpoints({
         method: 'PUT',
         body,
       }),
-      responseSchema: userResponseSchema,
       invalidatesTags: (_result: unknown, _error: unknown, { id }: { id: number }) => [
         { type: 'User', id },
         { type: 'User', id: 'LIST' },
