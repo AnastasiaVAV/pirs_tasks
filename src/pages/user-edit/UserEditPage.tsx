@@ -1,17 +1,14 @@
 import { Container } from '@mui/material';
-import { useParams } from 'react-router-dom';
 import { UserUpdateForm } from 'widgets/user-form';
 import { useGetUserByIdQuery } from 'entities/user';
-import { Loader, ErrorAlert } from 'shared/ui';
+import { Loader, ErrorAlert, Breadcrumbs } from 'shared/ui';
+import { useUserIdFromParams } from 'shared/lib';
 
 export const UserEditPage = () => {
-  const { id } = useParams<{ id: string }>();
-  const numericId = Number(id);
-  const isValidId = id !== undefined && !Number.isNaN(numericId);
-
+  const { numericId, isValid } = useUserIdFromParams();
   const { data: user, isLoading, isError } = useGetUserByIdQuery(numericId);
 
-  if (!isValidId) {
+  if (!isValid) {
     return <ErrorAlert title="Ошибка" message="ID пользователя не указан." />;
   }
 
@@ -28,6 +25,13 @@ export const UserEditPage = () => {
 
   return (
     <Container maxWidth="sm" sx={{ py: 3 }}>
+      <Breadcrumbs
+        items={[
+          { label: 'Пользователи', to: '/users' },
+          { label: user.username, to: `/users/${numericId}` },
+          { label: 'Редактирование' },
+        ]}
+      />
       <UserUpdateForm user={user} />
     </Container>
   );
