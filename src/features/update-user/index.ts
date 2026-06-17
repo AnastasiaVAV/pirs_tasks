@@ -10,6 +10,7 @@ export const useUpdateUserForm = (user: User, onSuccess?: () => void) => {
   const [updateUser, { isLoading, error }] = useUpdateUserMutation();
 
   const form = useForm<UserUpdateFormValues>({
+    mode: 'onBlur',
     resolver: yupResolver(userUpdateSchema),
     defaultValues: {
       username: user.username,

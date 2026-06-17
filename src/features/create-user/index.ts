@@ -9,6 +9,7 @@ export const useCreateUserForm = (onSuccess?: () => void) => {
   const [createUser, { isLoading, error }] = useCreateUserMutation();
 
   const form = useForm<UserCreateFormValues>({
+    mode: 'onBlur',
     resolver: yupResolver(userCreateSchema),
     defaultValues: {
       username: '',

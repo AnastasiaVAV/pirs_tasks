@@ -1,7 +1,5 @@
 import * as yup from 'yup';
 
-import { REQUIRED_FIELD } from 'shared/lib';
-
 // --- Response schemas (для RTK Query responseSchema) ---
 
 export const userResponseSchema = yup.object({
@@ -23,18 +21,28 @@ export const foodListSchema = yup.object().defined();
 // --- Form schemas (для react-hook-form + Yup) ---
 
 export const userCreateSchema = yup.object({
-  username: yup.string().required(REQUIRED_FIELD).max(255, 'Максимум 255 символов'),
+  username: yup.string().required('Необходимо заполнить «Имя»').max(255, 'Максимум 255 символов'),
   email: yup
     .string()
-    .required(REQUIRED_FIELD)
+    .required('Необходимо заполнить «Email»')
     .email('Некорректный email')
     .max(255, 'Максимум 255 символов'),
-  birthdate: yup.string().required(REQUIRED_FIELD),
+  birthdate: yup.string().required('Необходимо заполнить «Дата рождения»'),
   favorite_food_ids: yup.array().of(yup.number()).default([]),
   upload_photo: yup.mixed<File>().nullable().default(null),
 });
 
-export const userUpdateSchema = userCreateSchema.partial();
+export const userUpdateSchema = yup.object({
+  username: yup.string().required('Необходимо заполнить «Имя»').max(255, 'Максимум 255 символов'),
+  email: yup
+    .string()
+    .required('Необходимо заполнить «Email»')
+    .email('Некорректный email')
+    .max(255, 'Максимум 255 символов'),
+  birthdate: yup.string().required('Необходимо заполнить «Дата рождения»'),
+  favorite_food_ids: yup.array().of(yup.number()).optional(),
+  upload_photo: yup.mixed<File>().nullable().optional(),
+});
 
 export type UserCreateFormValues = yup.InferType<typeof userCreateSchema>;
 export type UserUpdateFormValues = yup.InferType<typeof userUpdateSchema>;
