@@ -1,5 +1,6 @@
 import { Table, TableBody, TableCell, TableContainer, TableRow, Paper } from '@mui/material';
 import { Loader, ErrorAlert, DeleteConfirmDialog } from 'shared/ui';
+import { extractErrorMessage } from 'shared/lib';
 import { useUsersList } from 'features/fetch-users';
 import { useDeleteUser } from 'features/delete-user';
 import { useFoodList } from 'features/fetch-food-list';
@@ -34,15 +35,7 @@ export const UsersTable = () => {
   if (isLoading) return <Loader />;
 
   if (isError) {
-    return (
-      <ErrorAlert
-        message={
-          error && typeof error === 'object' && 'message' in error
-            ? String(error.message)
-            : undefined
-        }
-      />
-    );
+    return <ErrorAlert message={extractErrorMessage(error)} />;
   }
 
   return (

@@ -1,4 +1,4 @@
-export type { User, UserCreateDto, UserListParams } from './types';
+export type { User, UserListParams } from './types';
 
 export { userCreateSchema, userUpdateSchema } from './schema';
 

@@ -13,7 +13,7 @@ import { Avatar, Button, Loader, ErrorAlert, DeleteConfirmDialog } from 'shared/
 import { useGetUserByIdQuery } from 'entities/user';
 import { useDeleteUser } from 'features/delete-user';
 import { useFoodList } from 'features/fetch-food-list';
-import { formatDateToDisplay } from 'shared/lib';
+import { formatDateToDisplay, extractErrorMessage, resolveFoodNames } from 'shared/lib';
 
 type UserCardProps = {
   userId: number;
@@ -36,15 +36,7 @@ export const UserCard = ({ userId }: UserCardProps) => {
   if (isLoading) return <Loader />;
 
   if (isError) {
-    return (
-      <ErrorAlert
-        message={
-          error && typeof error === 'object' && 'message' in error
-            ? String(error.message)
-            : undefined
-        }
-      />
-    );
+    return <ErrorAlert message={extractErrorMessage(error)} />;
   }
 
   if (!user) {
@@ -55,10 +47,7 @@ export const UserCard = ({ userId }: UserCardProps) => {
     );
   }
 
-  const favoriteFood = foodOptions
-    .filter((opt) => user.favorite_food_ids?.includes(opt.id))
-    .map((opt) => opt.label)
-    .join(', ');
+  const favoriteFood = resolveFoodNames(user.favorite_food_ids ?? [], foodOptions);
 
   const labelSx = { border: 1, borderColor: 'divider', py: 1.5, fontWeight: 'bold', width: 200 };
   const valueSx = { border: 1, borderColor: 'divider', py: 1.5 };
@@ -97,7 +86,9 @@ export const UserCard = ({ userId }: UserCardProps) => {
             {rows.map((row, index) => (
               <TableRow
                 key={row.label}
-                sx={{ bgcolor: index % 2 === 0 ? 'background.paper' : 'rgba(0, 0, 0, 0.05)' }}
+                sx={{
+                  bgcolor: index % 2 === 0 ? 'background.paper' : 'action.hover',
+                }}
               >
                 <TableCell sx={labelSx}>{row.label}</TableCell>
                 <TableCell sx={valueSx}>{row.value}</TableCell>

@@ -1,5 +1,5 @@
 import { Checkbox, TextField, Autocomplete } from '@mui/material';
-import type { SelectOption } from 'shared/ui/Select';
+import type { SelectOption } from 'shared/ui';
 
 const SELECT_ALL_ID = -1;
 

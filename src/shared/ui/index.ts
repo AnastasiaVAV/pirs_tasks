@@ -4,8 +4,7 @@ export type { ButtonProps } from './Button/Button';
 export { Input } from './Input/Input';
 export type { InputProps } from './Input/Input';
 
-export { Select } from './Select';
-export type { SelectProps, SelectOption } from './Select';
+export type { SelectOption } from './SelectOption';
 
 export { DatePicker } from './DatePicker/DatePicker';
 export type { DatePickerProps } from './DatePicker/DatePicker';
@@ -26,3 +25,5 @@ export { Breadcrumbs } from './Breadcrumbs/Breadcrumbs';
 export type { BreadcrumbsProps, BreadcrumbItem } from './Breadcrumbs/Breadcrumbs';
 
 export { MultiSelectWithAll } from './MultiSelectWithAll';
+
+export { cellSx, headerCellSx } from './tableStyles';

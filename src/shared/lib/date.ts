@@ -9,3 +9,14 @@ export const formatDateToDisplay = (date: string): string => {
   if (!isValid(parsed)) return date;
   return format(parsed, DISPLAY_FORMAT, { locale: ru });
 };
+
+export const parseDateStr = (value: string): Date | null => {
+  if (!value) return null;
+  const parsed = parse(value, DISPLAY_FORMAT, new Date());
+  return isValid(parsed) ? parsed : null;
+};
+
+export const formatDateStr = (date: Date | null): string =>
+  date && isValid(date) ? format(date, DISPLAY_FORMAT) : '';
+
+export { DISPLAY_FORMAT };

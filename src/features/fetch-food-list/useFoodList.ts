@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useGetFoodListQuery } from 'entities/user';
-import type { SelectOption } from 'shared/ui/Select';
+import type { SelectOption } from 'shared/ui';
 
 export const useFoodList = () => {
   const { data, ...rest } = useGetFoodListQuery();

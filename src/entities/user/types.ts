@@ -7,14 +7,6 @@ export interface User {
   photo_id: number | null;
 }
 
-export interface UserCreateDto {
-  username: string;
-  email: string;
-  birthdate: string;
-  favorite_food_ids?: number[];
-  upload_photo?: File | null;
-}
-
 export interface UserListParams {
   page?: number;
   'per-page'?: number;

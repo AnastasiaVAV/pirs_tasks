@@ -1,5 +1,4 @@
 import { useCallback, useState, useEffect } from 'react';
-import { parse, format, isValid } from 'date-fns';
 import {
   TableRow,
   TableCell,
@@ -9,19 +8,11 @@ import {
   Box,
   Typography,
 } from '@mui/material';
-import { DatePicker } from 'shared/ui';
+import { DatePicker, cellSx, headerCellSx } from 'shared/ui';
 import { MultiSelectWithAll } from 'shared/ui';
-import type { SelectOption } from 'shared/ui/Select';
+import { parseDateStr, formatDateStr } from 'shared/lib';
+import type { SelectOption } from 'shared/ui';
 import type { UserFilters, SortField } from 'features/fetch-users';
-
-const cellSx = { border: 1, borderColor: 'divider', py: 1, px: 1 };
-
-const headerCellSx = {
-  ...cellSx,
-  fontWeight: 'bold',
-  color: 'primary.main' as const,
-  textDecoration: 'underline',
-};
 
 type UsersTableHeaderProps = {
   filters: UserFilters;
@@ -155,11 +146,9 @@ export const UsersTableHeader = ({
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <DatePicker
               format="dd.MM.yyyy"
-              value={
-                localBirthdateStart ? parse(localBirthdateStart, 'dd.MM.yyyy', new Date()) : null
-              }
+              value={parseDateStr(localBirthdateStart)}
               onChange={(date: Date | null) => {
-                const value = date && isValid(date) ? format(date, 'dd.MM.yyyy') : '';
+                const value = formatDateStr(date);
                 setLocalBirthdateStart(value);
                 setFilter('birthdateStart', value);
               }}
@@ -173,9 +162,9 @@ export const UsersTableHeader = ({
             <Typography sx={{ mx: 0.5, flexShrink: 0 }}>—</Typography>
             <DatePicker
               format="dd.MM.yyyy"
-              value={localBirthdateEnd ? parse(localBirthdateEnd, 'dd.MM.yyyy', new Date()) : null}
+              value={parseDateStr(localBirthdateEnd)}
               onChange={(date: Date | null) => {
-                const value = date && isValid(date) ? format(date, 'dd.MM.yyyy') : '';
+                const value = formatDateStr(date);
                 setLocalBirthdateEnd(value);
                 setFilter('birthdateEnd', value);
               }}
