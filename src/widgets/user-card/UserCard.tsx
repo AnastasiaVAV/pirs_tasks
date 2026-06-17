@@ -7,9 +7,10 @@ import {
   Paper,
   Box,
   Typography,
+  Button,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { Avatar, Button, Loader, ErrorAlert, DeleteConfirmDialog } from 'shared/ui';
+import { Avatar, Loader, ErrorAlert, DeleteConfirmDialog } from 'shared/ui';
 import { useGetUserByIdQuery } from 'entities/user';
 import { useDeleteUser } from 'features/delete-user';
 import { useFoodList } from 'features/fetch-food-list';

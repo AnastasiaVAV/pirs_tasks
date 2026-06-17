@@ -1,6 +1,5 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { Button } from 'shared/ui';
 
 type UsersTableToolbarProps = {
   page: number;

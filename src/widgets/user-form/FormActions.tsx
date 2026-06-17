@@ -1,6 +1,5 @@
-import { Stack } from '@mui/material';
+import { Stack, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { Button } from 'shared/ui';
 
 type FormActionsProps = {
   isLoading?: boolean;

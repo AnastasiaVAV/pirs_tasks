@@ -1,5 +1,5 @@
 import { Table, TableBody, TableCell, TableContainer, TableRow, Paper } from '@mui/material';
-import { Loader, ErrorAlert, DeleteConfirmDialog } from 'shared/ui';
+import { Loader, ErrorAlert, DeleteConfirmDialog, TABLE_COLUMNS_COUNT } from 'shared/ui';
 import { extractErrorMessage } from 'shared/lib';
 import { useUsersList } from 'features/fetch-users';
 import { useDeleteUser } from 'features/delete-user';
@@ -65,7 +65,7 @@ export const UsersTable = () => {
               {users.length === 0 && (
                 <TableRow>
                   <TableCell
-                    colSpan={8}
+                    colSpan={TABLE_COLUMNS_COUNT}
                     sx={{ textAlign: 'center', py: 4, border: 1, borderColor: 'divider' }}
                   >
                     Нет данных

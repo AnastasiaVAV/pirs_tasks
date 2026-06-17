@@ -4,8 +4,8 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
+  Button,
 } from '@mui/material';
-import { Button } from 'shared/ui';
 
 export type DeleteConfirmDialogProps = {
   open: boolean;

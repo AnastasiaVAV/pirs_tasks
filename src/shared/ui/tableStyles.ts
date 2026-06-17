@@ -6,3 +6,5 @@ export const headerCellSx = {
   color: 'primary.main' as const,
   textDecoration: 'underline',
 };
+
+export const TABLE_COLUMNS_COUNT = 8;

@@ -8,7 +8,8 @@ import {
   Box,
   Typography,
 } from '@mui/material';
-import { DatePicker, cellSx, headerCellSx } from 'shared/ui';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { cellSx, headerCellSx } from 'shared/ui';
 import { MultiSelectWithAll } from 'shared/ui';
 import { parseDateStr, formatDateStr } from 'shared/lib';
 import type { SelectOption } from 'shared/ui';

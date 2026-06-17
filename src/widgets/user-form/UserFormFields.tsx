@@ -1,9 +1,9 @@
 import { useRef } from 'react';
-import { Stack, Box, Typography } from '@mui/material';
+import { Stack, Box, Typography, TextField } from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Controller, type UseFormReturn } from 'react-hook-form';
 import { parse, format } from 'date-fns';
-import { Input, DatePicker, Avatar } from 'shared/ui';
-import { MultiSelectWithAll } from 'shared/ui';
+import { Avatar, MultiSelectWithAll } from 'shared/ui';
 import { useFoodList } from 'features/fetch-food-list';
 import { FormActions } from './FormActions';
 
@@ -62,7 +62,7 @@ export const UserFormFields = ({ form, isLoading, avatarProps }: UserFormFieldsP
         name="username"
         control={form.control}
         render={({ field, fieldState }) => (
-          <Input
+          <TextField
             {...field}
             label="Имя"
             error={!!fieldState.error}
@@ -76,7 +76,7 @@ export const UserFormFields = ({ form, isLoading, avatarProps }: UserFormFieldsP
         name="email"
         control={form.control}
         render={({ field, fieldState }) => (
-          <Input
+          <TextField
             {...field}
             label="Email"
             error={!!fieldState.error}

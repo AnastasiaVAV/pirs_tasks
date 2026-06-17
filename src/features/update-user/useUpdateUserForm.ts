@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useUpdateUserMutation, userUpdateSchema } from 'entities/user';
@@ -7,6 +7,7 @@ import { buildUserFormData, handleServerErrors } from 'shared/lib';
 
 export const useUpdateUserForm = (user: User, onSuccess?: () => void) => {
   const [updateUser, { isLoading, error }] = useUpdateUserMutation();
+  const prevUserIdRef = useRef(user.id);
 
   const form = useForm<UserUpdateFormValues>({
     mode: 'onBlur',
@@ -21,14 +22,17 @@ export const useUpdateUserForm = (user: User, onSuccess?: () => void) => {
   });
 
   useEffect(() => {
-    form.reset({
-      username: user.username,
-      email: user.email,
-      birthdate: user.birthdate,
-      favorite_food_ids: user.favorite_food_ids,
-      upload_photo: null,
-    });
-  }, [user, form]);
+    if (prevUserIdRef.current !== user.id) {
+      prevUserIdRef.current = user.id;
+      form.reset({
+        username: user.username,
+        email: user.email,
+        birthdate: user.birthdate,
+        favorite_food_ids: user.favorite_food_ids,
+        upload_photo: null,
+      });
+    }
+  }, [user.id, user.username, user.email, user.birthdate, user.favorite_food_ids, form]);
 
   const onSubmit = useCallback(
     async (values: UserUpdateFormValues) => {
