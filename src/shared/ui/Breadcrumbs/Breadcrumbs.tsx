@@ -28,7 +28,7 @@ export const Breadcrumbs = ({ items }: BreadcrumbsProps) => {
         }
 
         return (
-          <MuiLink key={index} component={Link} to={item.to} underline="hover" color="inherit">
+          <MuiLink key={index} component={Link} to={item.to} underline="hover" color="primary">
             {item.label}
           </MuiLink>
         );
