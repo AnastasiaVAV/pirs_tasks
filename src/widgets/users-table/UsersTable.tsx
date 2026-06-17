@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { parse, format, isValid } from 'date-fns';
 import {
   Table,
   TableBody,
@@ -13,12 +14,12 @@ import {
   Link,
   TextField,
   TableSortLabel,
-  Select,
-  MenuItem,
+  Checkbox,
+  Autocomplete,
 } from '@mui/material';
 import { Pencil, Trash2, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { Avatar, Button, Loader, ErrorAlert, DeleteConfirmDialog } from 'shared/ui';
+import { Avatar, Button, DatePicker, Loader, ErrorAlert, DeleteConfirmDialog } from 'shared/ui';
 import { useUsersList } from 'features/fetch-users';
 import { useDeleteUser } from 'features/delete-user';
 import { useFoodList } from 'features/fetch-food-list';
@@ -40,6 +41,7 @@ export const UsersTable = () => {
     error,
   } = useUsersList();
   const { options: foodOptions } = useFoodList();
+
   const {
     userIdToDelete,
     requestDelete,
@@ -54,6 +56,10 @@ export const UsersTable = () => {
   const [localBirthdateStart, setLocalBirthdateStart] = useState(filters.birthdateStart);
   const [localBirthdateEnd, setLocalBirthdateEnd] = useState(filters.birthdateEnd);
   const [localFoodIds, setLocalFoodIds] = useState<number[]>(filters.foodIds);
+
+  const SELECT_ALL_ID = -1;
+  const allFoodOptions = [{ id: SELECT_ALL_ID, label: 'Выбрать все' }, ...foodOptions];
+  const allFoodSelected = foodOptions.length > 0 && localFoodIds.length === foodOptions.length;
 
   useEffect(() => {
     setLocalId(filters.id);
@@ -70,18 +76,6 @@ export const UsersTable = () => {
     [setFilter, localUsername]
   );
   const commitEmail = useCallback(() => setFilter('email', localEmail), [setFilter, localEmail]);
-  const commitBirthdateStart = useCallback(
-    () => setFilter('birthdateStart', localBirthdateStart),
-    [setFilter, localBirthdateStart]
-  );
-  const commitBirthdateEnd = useCallback(
-    () => setFilter('birthdateEnd', localBirthdateEnd),
-    [setFilter, localBirthdateEnd]
-  );
-  const commitFoodIds = useCallback(
-    () => setFilter('foodIds', localFoodIds),
-    [setFilter, localFoodIds]
-  );
 
   const from = totalCount > 0 ? (page - 1) * perPage + 1 : 0;
   const to = Math.min(page * perPage, totalCount);
@@ -92,7 +86,7 @@ export const UsersTable = () => {
       .filter(Boolean)
       .join(', ');
 
-  const cellSx = { border: 1, borderColor: 'divider' };
+  const cellSx = { border: 1, borderColor: 'divider', py: 1, px: 1 };
 
   if (isLoading) return <Loader />;
 
@@ -153,6 +147,7 @@ export const UsersTable = () => {
                     active={getSortDirection('id') !== false}
                     direction={getSortDirection('id') || 'asc'}
                     onClick={() => toggleSort('id')}
+                    sx={{ textDecoration: 'underline', color: 'primary.main !important' }}
                   >
                     ID
                   </TableSortLabel>
@@ -179,6 +174,7 @@ export const UsersTable = () => {
                     active={getSortDirection('username') !== false}
                     direction={getSortDirection('username') || 'asc'}
                     onClick={() => toggleSort('username')}
+                    sx={{ textDecoration: 'underline', color: 'primary.main !important' }}
                   >
                     Имя
                   </TableSortLabel>
@@ -195,6 +191,7 @@ export const UsersTable = () => {
                     active={getSortDirection('email') !== false}
                     direction={getSortDirection('email') || 'asc'}
                     onClick={() => toggleSort('email')}
+                    sx={{ textDecoration: 'underline', color: 'primary.main !important' }}
                   >
                     Email
                   </TableSortLabel>
@@ -211,6 +208,7 @@ export const UsersTable = () => {
                     active={getSortDirection('birthdate') !== false}
                     direction={getSortDirection('birthdate') || 'asc'}
                     onClick={() => toggleSort('birthdate')}
+                    sx={{ textDecoration: 'underline', color: 'primary.main !important' }}
                   >
                     Дата рождения
                   </TableSortLabel>
@@ -227,6 +225,7 @@ export const UsersTable = () => {
                     active={getSortDirection('favorite_food_ids') !== false}
                     direction={getSortDirection('favorite_food_ids') || 'asc'}
                     onClick={() => toggleSort('favorite_food_ids')}
+                    sx={{ textDecoration: 'underline', color: 'primary.main !important' }}
                   >
                     Любимая еда
                   </TableSortLabel>
@@ -238,9 +237,7 @@ export const UsersTable = () => {
                     color: 'primary.main',
                     textDecoration: 'underline',
                   }}
-                >
-                  &nbsp;
-                </TableCell>
+                />
               </TableRow>
               <TableRow>
                 <TableCell sx={cellSx} />
@@ -276,49 +273,86 @@ export const UsersTable = () => {
                   />
                 </TableCell>
                 <TableCell sx={cellSx}>
-                  <Box sx={{ display: 'flex', gap: 0.5 }}>
-                    <TextField
-                      size="small"
-                      type="date"
-                      sx={{ flex: 1 }}
-                      value={localBirthdateStart}
-                      onChange={(e) => setLocalBirthdateStart(e.target.value)}
-                      onBlur={commitBirthdateStart}
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <DatePicker
+                      format="dd.MM.yyyy"
+                      value={
+                        localBirthdateStart
+                          ? parse(localBirthdateStart, 'dd.MM.yyyy', new Date())
+                          : null
+                      }
+                      onChange={(date: Date | null) => {
+                        const value = date && isValid(date) ? format(date, 'dd.MM.yyyy') : '';
+                        setLocalBirthdateStart(value);
+                        setFilter('birthdateStart', value);
+                      }}
+                      slotProps={{
+                        textField: {
+                          size: 'small',
+                          sx: { width: 150 },
+                        },
+                      }}
                     />
-                    <TextField
-                      size="small"
-                      type="date"
-                      sx={{ flex: 1 }}
-                      value={localBirthdateEnd}
-                      onChange={(e) => setLocalBirthdateEnd(e.target.value)}
-                      onBlur={commitBirthdateEnd}
+                    <Typography sx={{ mx: 0.5, flexShrink: 0 }}>—</Typography>
+                    <DatePicker
+                      format="dd.MM.yyyy"
+                      value={
+                        localBirthdateEnd
+                          ? parse(localBirthdateEnd, 'dd.MM.yyyy', new Date())
+                          : null
+                      }
+                      onChange={(date: Date | null) => {
+                        const value = date && isValid(date) ? format(date, 'dd.MM.yyyy') : '';
+                        setLocalBirthdateEnd(value);
+                        setFilter('birthdateEnd', value);
+                      }}
+                      slotProps={{
+                        textField: {
+                          size: 'small',
+                          sx: { width: 150 },
+                        },
+                      }}
                     />
                   </Box>
                 </TableCell>
-                <TableCell sx={cellSx}>
-                  <Select
-                    size="small"
+                <TableCell sx={{ ...cellSx, minWidth: 200 }}>
+                  <Autocomplete
                     multiple
-                    fullWidth
-                    displayEmpty
-                    value={localFoodIds}
-                    onChange={(e) => setLocalFoodIds(e.target.value as number[])}
-                    onClose={commitFoodIds}
-                    renderValue={(selected) =>
-                      selected.length === 0
-                        ? ''
-                        : foodOptions
-                            .filter((opt) => selected.includes(opt.id))
-                            .map((opt) => opt.label)
-                            .join(', ')
+                    size="small"
+                    options={allFoodOptions}
+                    value={
+                      allFoodSelected
+                        ? [{ id: SELECT_ALL_ID, label: 'Выбрать все' }, ...foodOptions]
+                        : foodOptions.filter((opt) => localFoodIds.includes(opt.id))
                     }
-                  >
-                    {foodOptions.map((opt) => (
-                      <MenuItem key={opt.id} value={opt.id}>
-                        {opt.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
+                    getOptionLabel={(opt) => (opt.id === SELECT_ALL_ID ? 'Выбрать все' : opt.label)}
+                    isOptionEqualToValue={(opt, val) => opt.id === val.id}
+                    onChange={(_, value) => {
+                      const hasSelectAll = value.some((v) => v.id === SELECT_ALL_ID);
+                      if (hasSelectAll) {
+                        setLocalFoodIds(foodOptions.map((o) => o.id));
+                        setFilter(
+                          'foodIds',
+                          foodOptions.map((o) => o.id)
+                        );
+                      } else {
+                        const ids = value.map((v) => v.id);
+                        setLocalFoodIds(ids);
+                        setFilter('foodIds', ids);
+                      }
+                    }}
+                    renderOption={(props, opt) => {
+                      const isChecked =
+                        opt.id === SELECT_ALL_ID ? allFoodSelected : localFoodIds.includes(opt.id);
+                      return (
+                        <li {...props} key={opt.id}>
+                          <Checkbox checked={isChecked} sx={{ mr: 1 }} />
+                          {opt.label}
+                        </li>
+                      );
+                    }}
+                    renderInput={(params) => <TextField {...params} placeholder="Еда..." />}
+                  />
                 </TableCell>
                 <TableCell sx={cellSx} />
               </TableRow>
@@ -345,30 +379,31 @@ export const UsersTable = () => {
                   <TableCell sx={cellSx}>{formatDateToDisplay(user.birthdate)}</TableCell>
                   <TableCell sx={cellSx}>{getFoodNames(user.favorite_food_ids) || '—'}</TableCell>
                   <TableCell sx={cellSx}>
-                    <Box sx={{ display: 'flex', gap: 0.5 }}>
-                      <IconButton
-                        size="small"
-                        onClick={() => void navigate(`/users/${user.id}`)}
-                        title="Просмотр"
-                      >
-                        <Eye size={16} />
-                      </IconButton>
-                      <IconButton
-                        size="small"
-                        onClick={() => void navigate(`/users/${user.id}/edit`)}
-                        title="Редактировать"
-                      >
-                        <Pencil size={16} />
-                      </IconButton>
-                      <IconButton
-                        size="small"
-                        color="error"
-                        onClick={() => requestDelete(user.id)}
-                        title="Удалить"
-                      >
-                        <Trash2 size={16} />
-                      </IconButton>
-                    </Box>
+                    <IconButton
+                      size="small"
+                      sx={{ mx: 0.25 }}
+                      onClick={() => void navigate(`/users/${user.id}`)}
+                      title="Просмотр"
+                    >
+                      <Eye size={16} />
+                    </IconButton>
+                    <IconButton
+                      size="small"
+                      sx={{ mx: 0.25 }}
+                      onClick={() => void navigate(`/users/${user.id}/edit`)}
+                      title="Редактировать"
+                    >
+                      <Pencil size={16} />
+                    </IconButton>
+                    <IconButton
+                      size="small"
+                      sx={{ mx: 0.25 }}
+                      color="error"
+                      onClick={() => requestDelete(user.id)}
+                      title="Удалить"
+                    >
+                      <Trash2 size={16} />
+                    </IconButton>
                   </TableCell>
                 </TableRow>
               ))}

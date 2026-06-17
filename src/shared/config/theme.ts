@@ -19,6 +19,16 @@ export const theme = createTheme(
           },
         },
       },
+      MuiTableSortLabel: {
+        styleOverrides: {
+          root: {
+            color: '#1976d2',
+            '&.Mui-active': {
+              color: '#1976d2 !important',
+            },
+          },
+        },
+      },
     },
   },
   ruRU
