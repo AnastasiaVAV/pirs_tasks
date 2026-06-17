@@ -1,6 +1,6 @@
-export const API_BASE_URL = 'http://tasks.tizh.ru';
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-export const API_KEY = 'secret_key';
+export const API_KEY = import.meta.env.VITE_API_KEY;
 
 export const STORAGE_KEYS = {
   TOKEN: 'auth_token',

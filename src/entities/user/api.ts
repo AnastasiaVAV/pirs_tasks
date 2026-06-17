@@ -1,5 +1,6 @@
 import { baseApi } from 'shared/api';
 import type { User, UserListParams } from './types';
+import { parseRawUser } from './lib';
 
 export const userApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -10,16 +11,7 @@ export const userApi = baseApi.injectEndpoints({
       }),
       transformResponse: (response: unknown, meta) => {
         const users = Array.isArray(response)
-          ? response.map((u: Record<string, unknown>) => ({
-              id: u.id as number,
-              username: u.username as string,
-              email: u.email as string,
-              birthdate: u.birthdate as string,
-              favorite_food_ids: Array.isArray(u.favorite_food_ids)
-                ? u.favorite_food_ids.map(Number)
-                : [],
-              photo_id: (u.photo_id as number) ?? null,
-            }))
+          ? response.map((u: Record<string, unknown>) => parseRawUser(u))
           : [];
         return {
           data: users,
@@ -39,19 +31,7 @@ export const userApi = baseApi.injectEndpoints({
 
     getUserById: builder.query<User, number>({
       query: (id) => ({ url: '/v1/user/view', params: { id } }),
-      transformResponse: (response: unknown) => {
-        const u = response as Record<string, unknown>;
-        return {
-          id: u.id as number,
-          username: u.username as string,
-          email: u.email as string,
-          birthdate: u.birthdate as string,
-          favorite_food_ids: Array.isArray(u.favorite_food_ids)
-            ? u.favorite_food_ids.map(Number)
-            : [],
-          photo_id: (u.photo_id as number) ?? null,
-        };
-      },
+      transformResponse: (response: unknown) => parseRawUser(response as Record<string, unknown>),
       providesTags: (_result, _error, id) => [{ type: 'User', id }],
     }),
 

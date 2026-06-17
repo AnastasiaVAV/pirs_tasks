@@ -1,17 +1,18 @@
 import { configureStore, createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { baseApi } from '@/shared/api/baseApi';
+import { baseApi } from 'shared/api';
+import { STORAGE_KEYS } from 'shared/config';
 
 const authSlice = createSlice({
   name: 'auth',
-  initialState: { token: localStorage.getItem('auth_token') },
+  initialState: { token: localStorage.getItem(STORAGE_KEYS.TOKEN) },
   reducers: {
     setToken: (state, action: PayloadAction<string | null>) => {
       state.token = action.payload;
       if (action.payload) {
-        localStorage.setItem('auth_token', action.payload);
+        localStorage.setItem(STORAGE_KEYS.TOKEN, action.payload);
       } else {
-        localStorage.removeItem('auth_token');
+        localStorage.removeItem(STORAGE_KEYS.TOKEN);
       }
     },
   },

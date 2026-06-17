@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { API_BASE_URL, API_KEY, STORAGE_KEYS } from '@/shared/config/api';
+import { API_BASE_URL, API_KEY, STORAGE_KEYS } from 'shared/config';
 
 export const baseApi = createApi({
   reducerPath: 'api',

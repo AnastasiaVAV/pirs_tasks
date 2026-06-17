@@ -5,7 +5,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { ru } from 'date-fns/locale/ru';
 import { store } from './store';
-import { theme } from 'shared/config/theme';
+import { theme } from 'shared/config';
 
 export const StoreProvider = ({ children }: { children: React.ReactNode }) => {
   return (

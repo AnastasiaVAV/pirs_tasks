@@ -1,6 +1,6 @@
 import { Avatar as MuiAvatar } from '@mui/material';
 import type { AvatarProps as MuiAvatarProps } from '@mui/material';
-import { API_BASE_URL } from '@/shared/config/api';
+import { API_BASE_URL } from 'shared/config';
 
 export type AvatarProps = Omit<MuiAvatarProps, 'src'> & {
   photoId?: number | null;

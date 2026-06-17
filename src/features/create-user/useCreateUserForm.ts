@@ -1,10 +1,9 @@
 import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useCreateUserMutation } from 'entities/user';
-import { userCreateSchema } from 'entities/user/schema';
-import type { UserCreateFormValues } from 'entities/user/schema';
-import { buildUserFormData, handleServerErrors } from 'shared/lib/form-utils';
+import { useCreateUserMutation, userCreateSchema } from 'entities/user';
+import type { UserCreateFormValues } from 'entities/user';
+import { buildUserFormData, handleServerErrors } from 'shared/lib';
 
 export const useCreateUserForm = (onSuccess?: () => void) => {
   const [createUser, { isLoading, error }] = useCreateUserMutation();
