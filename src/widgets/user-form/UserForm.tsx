@@ -35,38 +35,36 @@ export const UserForm = (props: UserFormProps) => {
   return (
     <form onSubmit={(e) => void form.handleSubmit(onSubmit)(e)}>
       <Stack spacing={3} sx={{ mt: '30px' }}>
-        {isUpdate && (
-          <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-            <Avatar
-              photoId={props.user.photo_id}
-              fallback={props.user.username}
-              sx={{ width: 150, height: 150 }}
-            />
-            <Controller
-              name="upload_photo"
-              control={form.control}
-              render={({ field }) => (
-                <>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    hidden
-                    onChange={(e) => field.onChange(e.target.files?.[0] ?? null)}
-                  />
-                  <Typography
-                    variant="body2"
-                    color="primary"
-                    sx={{ cursor: 'pointer', mt: 0.5, '&:hover': { textDecoration: 'underline' } }}
-                    onClick={handleReplaceClick}
-                  >
-                    Заменить
-                  </Typography>
-                </>
-              )}
-            />
-          </Box>
-        )}
+        <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+          <Avatar
+            photoId={isUpdate ? props.user.photo_id : undefined}
+            fallback={isUpdate ? props.user.username : undefined}
+            sx={{ width: 150, height: 150 }}
+          />
+          <Controller
+            name="upload_photo"
+            control={form.control}
+            render={({ field }) => (
+              <>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  hidden
+                  onChange={(e) => field.onChange(e.target.files?.[0] ?? null)}
+                />
+                <Typography
+                  variant="body2"
+                  color="primary"
+                  sx={{ cursor: 'pointer', mt: 0.5, '&:hover': { textDecoration: 'underline' } }}
+                  onClick={handleReplaceClick}
+                >
+                  Заменить
+                </Typography>
+              </>
+            )}
+          />
+        </Box>
 
         <Controller
           name="username"
@@ -179,7 +177,7 @@ export const UserForm = (props: UserFormProps) => {
 
         <Stack direction="row" spacing={2}>
           <Button type="submit" variant="contained" color="success" disabled={isLoading}>
-            {isUpdate ? 'Сохранить' : 'Создать'}
+            Сохранить
           </Button>
           <Button variant="outlined" onClick={() => void navigate(-1)}>
             Отмена
