@@ -5,10 +5,9 @@ import {
   TableContainer,
   TableRow,
   Paper,
-  Stack,
+  Box,
   Typography,
 } from '@mui/material';
-import { Pencil, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, Button, Loader, ErrorAlert, DeleteConfirmDialog } from 'shared/ui';
 import { useGetUserByIdQuery } from 'entities/user';
@@ -61,70 +60,49 @@ export const UserCard = ({ userId }: UserCardProps) => {
     .map((opt) => opt.label)
     .join(', ');
 
-  const cellSx = { border: 1, borderColor: 'divider', py: 1.5 };
+  const labelSx = { border: 1, borderColor: 'divider', py: 1.5, fontWeight: 'bold', width: 200 };
+  const valueSx = { border: 1, borderColor: 'divider', py: 1.5 };
+
+  const rows = [
+    { label: 'ID', value: user.id },
+    { label: 'Имя', value: user.username },
+    {
+      label: 'Email',
+      value: <a href={`mailto:${user.email}`}>{user.email}</a>,
+    },
+    { label: 'Дата рождения', value: formatDateToDisplay(user.birthdate) },
+    { label: 'Любимая еда', value: favoriteFood || '—' },
+    {
+      label: 'Фото',
+      value: (
+        <Avatar photoId={user.photo_id} fallback={user.username} sx={{ width: 150, height: 150 }} />
+      ),
+    },
+  ];
 
   return (
     <>
-      <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
-        <Button
-          startIcon={<Pencil />}
-          variant="contained"
-          onClick={() => void navigate(`/users/${userId}/edit`)}
-        >
+      <Box sx={{ mb: 2, display: 'flex', gap: 1 }}>
+        <Button variant="contained" onClick={() => void navigate(`/users/${userId}/edit`)}>
           Изменить
         </Button>
-        <Button
-          startIcon={<Trash2 />}
-          variant="outlined"
-          color="error"
-          onClick={() => requestDelete(userId)}
-        >
+        <Button variant="outlined" color="error" onClick={() => requestDelete(userId)}>
           Удалить
         </Button>
-      </Stack>
+      </Box>
 
       <TableContainer component={Paper}>
         <Table sx={{ border: 1, borderColor: 'divider' }}>
           <TableBody>
-            <TableRow>
-              <TableCell sx={{ ...cellSx, fontWeight: 'bold', width: 200, bgcolor: 'grey.50' }}>
-                ID
-              </TableCell>
-              <TableCell sx={cellSx}>{user.id}</TableCell>
-              <TableCell sx={cellSx} rowSpan={6} align="center" verticalAlign="top">
-                <Avatar
-                  photoId={user.photo_id}
-                  fallback={user.username}
-                  sx={{ width: 120, height: 120 }}
-                />
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell sx={{ ...cellSx, fontWeight: 'bold', bgcolor: 'grey.50' }}>Имя</TableCell>
-              <TableCell sx={cellSx}>{user.username}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell sx={{ ...cellSx, fontWeight: 'bold', bgcolor: 'grey.50' }}>
-                Email
-              </TableCell>
-              <TableCell sx={cellSx}>{user.email}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell sx={{ ...cellSx, fontWeight: 'bold', bgcolor: 'grey.50' }}>
-                Дата рождения
-              </TableCell>
-              <TableCell sx={cellSx}>{formatDateToDisplay(user.birthdate)}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell sx={{ ...cellSx, fontWeight: 'bold', bgcolor: 'grey.50' }}>
-                Любимая еда
-              </TableCell>
-              <TableCell sx={cellSx}>{favoriteFood || '—'}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell sx={{ ...cellSx, fontWeight: 'bold', bgcolor: 'grey.50' }}>Фото</TableCell>
-              <TableCell sx={cellSx}>{user.photo_id ? 'Загружено' : 'Нет'}</TableCell>
-            </TableRow>
+            {rows.map((row, index) => (
+              <TableRow
+                key={row.label}
+                sx={{ bgcolor: index % 2 === 0 ? 'background.paper' : 'rgba(0, 0, 0, 0.05)' }}
+              >
+                <TableCell sx={labelSx}>{row.label}</TableCell>
+                <TableCell sx={valueSx}>{row.value}</TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </TableContainer>

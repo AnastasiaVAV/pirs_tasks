@@ -12,10 +12,8 @@ export const UserViewPage = () => {
   }
 
   return (
-    <Container maxWidth="sm" sx={{ py: 3 }}>
-      <Breadcrumbs
-        items={[{ label: 'Пользователи', to: '/users' }, { label: `Просмотр #${id}` }]}
-      />
+    <Container maxWidth="lg" sx={{ py: 3 }}>
+      <Breadcrumbs items={[{ label: 'Пользователи', to: '/users' }, { label: id }]} />
       <UserCard userId={numericId} />
     </Container>
   );
