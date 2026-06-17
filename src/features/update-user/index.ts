@@ -57,7 +57,7 @@ export const useUpdateUserForm = (user: User, onSuccess?: () => void) => {
           const data = err.data as Record<string, string[]>;
           Object.entries(data).forEach(([field, messages]) => {
             if (field in form.getValues()) {
-              form.setError(field as keyof UserUpdateFormValues, {
+              form.setError(field, {
                 type: 'server',
                 message: messages.join(', '),
               });

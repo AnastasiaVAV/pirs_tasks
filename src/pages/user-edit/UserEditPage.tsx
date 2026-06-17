@@ -13,9 +13,7 @@ export const UserEditPage = () => {
     data: user,
     isLoading,
     isError,
-  } = useGetUserByIdQuery(numericId, {
-    skip: !isValidId,
-  });
+  } = useGetUserByIdQuery(numericId);
 
   if (!isValidId) {
     return <ErrorAlert title="Ошибка" message="ID пользователя не указан." />;

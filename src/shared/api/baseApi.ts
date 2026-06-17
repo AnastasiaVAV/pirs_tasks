@@ -20,5 +20,5 @@ export const baseApi = createApi({
     },
   }),
   tagTypes: ['User'],
-  endpoints: () => ({}) as Record<string, never>,
+  endpoints: () => ({}),
 });
