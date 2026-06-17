@@ -12,7 +12,7 @@ export const StoreProvider = ({ children }: { children: React.ReactNode }) => {
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <LocalizationProvider dateAdapter={AdapterDateFns} locale={ru}>
+        <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ru}>
           {children}
         </LocalizationProvider>
       </ThemeProvider>

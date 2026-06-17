@@ -6,7 +6,7 @@ export type LoaderProps = {
 
 export const Loader = ({ size = 40 }: LoaderProps) => {
   return (
-    <Box display="flex" justifyContent="center" alignItems="center" p={4}>
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', p: 4 }}>
       <CircularProgress size={size} />
     </Box>
   );

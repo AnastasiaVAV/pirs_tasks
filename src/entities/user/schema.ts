@@ -22,8 +22,8 @@ export const userUpdateSchema = yup.object({
     .email('Некорректный email')
     .max(255, 'Максимум 255 символов'),
   birthdate: yup.string().required('Необходимо заполнить «Дата рождения»'),
-  favorite_food_ids: yup.array().of(yup.number()).optional(),
-  upload_photo: yup.mixed<File>().nullable().optional(),
+  favorite_food_ids: yup.array().of(yup.number().defined()).default([]),
+  upload_photo: yup.mixed<File>().nullable().default(null),
 });
 
 export type UserCreateFormValues = yup.InferType<typeof userCreateSchema>;

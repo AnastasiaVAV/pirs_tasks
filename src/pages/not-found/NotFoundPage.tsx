@@ -7,7 +7,7 @@ export const NotFoundPage = () => {
 
   return (
     <Container maxWidth="sm" sx={{ textAlign: 'center', py: 8 }}>
-      <Stack spacing={3} alignItems="center">
+      <Stack spacing={3} sx={{ alignItems: 'center' }}>
         <Typography variant="h1" color="textSecondary">
           404
         </Typography>

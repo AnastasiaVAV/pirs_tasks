@@ -7,7 +7,6 @@ export type { InputProps } from './Input/Input';
 export type { SelectOption } from './SelectOption';
 
 export { DatePicker } from './DatePicker/DatePicker';
-export type { DatePickerProps } from './DatePicker/DatePicker';
 
 export { Avatar } from './Avatar';
 export type { AvatarProps } from './Avatar';

@@ -8,7 +8,7 @@ export const userApi = baseApi.injectEndpoints({
         url: '/v1/user/index',
         params,
       }),
-      transformResponse: (response: unknown, meta: { response?: Response }) => {
+      transformResponse: (response: unknown, meta) => {
         const users = Array.isArray(response)
           ? response.map((u: Record<string, unknown>) => ({
               id: u.id as number,
