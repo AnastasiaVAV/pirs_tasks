@@ -1,7 +1,8 @@
-import { Stack, Typography } from '@mui/material';
+import { useCallback, useRef } from 'react';
+import { Stack, Typography, Box, Checkbox, Autocomplete, TextField } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { Controller } from 'react-hook-form';
-import { Input, Button, DatePicker, Select, Avatar, ErrorAlert } from 'shared/ui';
+import { Input, Button, DatePicker, Avatar } from 'shared/ui';
 import { useCreateUserForm } from 'features/create-user';
 import { useUpdateUserForm } from 'features/update-user';
 import { useFoodList } from 'features/fetch-food-list';
@@ -14,6 +15,7 @@ type UserFormProps =
 export const UserForm = (props: UserFormProps) => {
   const navigate = useNavigate();
   const { options: foodOptions } = useFoodList();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const createForm = useCreateUserForm(() => {
     void navigate('/users');
@@ -25,28 +27,44 @@ export const UserForm = (props: UserFormProps) => {
   const isUpdate = props.mode === 'update';
   const { form, onSubmit, isLoading } = isUpdate ? updateForm : createForm;
 
+  const handleReplaceClick = useCallback(() => {
+    fileInputRef.current?.click();
+  }, []);
+
   return (
     <form onSubmit={(e) => void form.handleSubmit(onSubmit)(e)}>
-      <Stack spacing={3}>
-        <Typography variant="h5">
-          {isUpdate ? 'Редактирование пользователя' : 'Создание пользователя'}
-        </Typography>
-
-        {isUpdate && updateForm.error && (
-          <ErrorAlert message="Произошла ошибка при сохранении. Попробуйте позже." />
-        )}
-        {!isUpdate && createForm.error && (
-          <ErrorAlert message="Произошла ошибка при создании. Попробуйте позже." />
-        )}
-
+      <Stack spacing={3} sx={{ mt: '30px' }}>
         {isUpdate && (
-          <Stack alignItems="center">
+          <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
             <Avatar
               photoId={props.user.photo_id}
               fallback={props.user.username}
-              sx={{ width: 100, height: 100 }}
+              sx={{ width: 150, height: 150 }}
             />
-          </Stack>
+            <Controller
+              name="upload_photo"
+              control={form.control}
+              render={({ field }) => (
+                <>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    hidden
+                    onChange={(e) => field.onChange(e.target.files?.[0] ?? null)}
+                  />
+                  <Typography
+                    variant="body2"
+                    color="primary"
+                    sx={{ cursor: 'pointer', mt: 0.5, '&:hover': { textDecoration: 'underline' } }}
+                    onClick={handleReplaceClick}
+                  >
+                    Заменить
+                  </Typography>
+                </>
+              )}
+            />
+          </Box>
         )}
 
         <Controller
@@ -84,7 +102,7 @@ export const UserForm = (props: UserFormProps) => {
             <DatePicker
               label="Дата рождения"
               value={field.value || null}
-              onChange={(date) => field.onChange(date ?? '')}
+              onChange={(date: string | null) => field.onChange(date ?? '')}
               slotProps={{
                 textField: {
                   error: !!fieldState.error,
@@ -99,32 +117,56 @@ export const UserForm = (props: UserFormProps) => {
         <Controller
           name="favorite_food_ids"
           control={form.control}
-          render={({ field, fieldState }) => (
-            <Select
-              label="Любимая еда"
-              options={foodOptions}
-              value={foodOptions.filter((opt) => field.value?.includes(opt.id))}
-              onChange={(_, value) => field.onChange(value.map((v) => v.id))}
-              error={!!fieldState.error}
-              helperText={fieldState.error?.message}
-            />
-          )}
-        />
+          render={({ field, fieldState }) => {
+            const selectedIds: number[] = (field.value ?? []).filter((v): v is number => v != null);
+            const allSelected = foodOptions.length > 0 && selectedIds.length === foodOptions.length;
 
-        <Controller
-          name="upload_photo"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <Input
-              type="file"
-              label="Фото"
-              onChange={(e) => field.onChange(e.target.files?.[0] ?? null)}
-              error={!!fieldState.error}
-              helperText={fieldState.error?.message}
-              fullWidth
-              inputProps={{ accept: 'image/*' }}
-            />
-          )}
+            const SELECT_ALL_ID = -1;
+
+            const allOptions = [{ id: SELECT_ALL_ID, label: 'Выбрать все' }, ...foodOptions];
+
+            const selectedOptions = foodOptions.filter((opt) => selectedIds.includes(opt.id));
+
+            return (
+              <Autocomplete
+                multiple
+                options={allOptions}
+                value={
+                  allSelected
+                    ? [{ id: SELECT_ALL_ID, label: 'Выбрать все' }, ...foodOptions]
+                    : selectedOptions
+                }
+                getOptionLabel={(opt) => (opt.id === SELECT_ALL_ID ? 'Выбрать все' : opt.label)}
+                isOptionEqualToValue={(opt, val) => opt.id === val.id}
+                onChange={(_, value) => {
+                  const hasSelectAll = value.some((v) => v.id === SELECT_ALL_ID);
+                  if (hasSelectAll) {
+                    field.onChange(foodOptions.map((o) => o.id));
+                  } else {
+                    field.onChange(value.map((v) => v.id));
+                  }
+                }}
+                renderOption={(props, opt) => {
+                  const isChecked =
+                    opt.id === SELECT_ALL_ID ? allSelected : selectedIds.includes(opt.id);
+                  return (
+                    <li {...props} key={opt.id}>
+                      <Checkbox checked={isChecked} sx={{ mr: 1 }} />
+                      {opt.label}
+                    </li>
+                  );
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Любимая еда"
+                    error={!!fieldState.error}
+                    helperText={fieldState.error?.message}
+                  />
+                )}
+              />
+            );
+          }}
         />
 
         <Stack direction="row" spacing={2}>
