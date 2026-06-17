@@ -2,6 +2,7 @@ import { useCallback, useRef } from 'react';
 import { Stack, Typography, Box, Checkbox, Autocomplete, TextField } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { Controller } from 'react-hook-form';
+import { parse, format } from 'date-fns';
 import { Input, Button, DatePicker, Avatar } from 'shared/ui';
 import { useCreateUserForm } from 'features/create-user';
 import { useUpdateUserForm } from 'features/update-user';
@@ -98,20 +99,27 @@ export const UserForm = (props: UserFormProps) => {
         <Controller
           name="birthdate"
           control={form.control}
-          render={({ field, fieldState }) => (
-            <DatePicker
-              label="Дата рождения"
-              value={field.value || null}
-              onChange={(date: string | null) => field.onChange(date ?? '')}
-              slotProps={{
-                textField: {
-                  error: !!fieldState.error,
-                  helperText: fieldState.error?.message,
-                  fullWidth: true,
-                },
-              }}
-            />
-          )}
+          render={({ field, fieldState }) => {
+            const dateValue = field.value ? parse(field.value, 'dd.MM.yyyy', new Date()) : null;
+
+            return (
+              <DatePicker
+                format="dd.MM.yyyy"
+                label="Дата рождения"
+                value={dateValue}
+                onChange={(date: Date | null) =>
+                  field.onChange(date ? format(date, 'dd.MM.yyyy') : '')
+                }
+                slotProps={{
+                  textField: {
+                    error: !!fieldState.error,
+                    helperText: fieldState.error?.message,
+                    fullWidth: true,
+                  },
+                }}
+              />
+            );
+          }}
         />
 
         <Controller
