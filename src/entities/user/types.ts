@@ -15,8 +15,6 @@ export interface UserCreateDto {
   upload_photo?: File | null;
 }
 
-export type UserUpdateDto = Partial<UserCreateDto>;
-
 export interface UserListParams {
   page?: number;
   'per-page'?: number;
@@ -30,5 +28,3 @@ export interface UserListParams {
   'UserSearch[birthdateEnd]'?: string;
   'UserSearch[foodIds]'?: number[];
 }
-
-export type FoodItem = Record<string, string>;

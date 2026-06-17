@@ -1,1 +1,0 @@
-export { useGetFileByIdQuery } from './api';

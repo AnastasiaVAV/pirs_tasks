@@ -1,12 +1,6 @@
-export type { User, UserCreateDto, UserUpdateDto, UserListParams, FoodItem } from './types';
+export type { User, UserCreateDto, UserListParams } from './types';
 
-export {
-  userResponseSchema,
-  userListResponseSchema,
-  foodListSchema,
-  userCreateSchema,
-  userUpdateSchema,
-} from './schema';
+export { userCreateSchema, userUpdateSchema } from './schema';
 
 export type { UserCreateFormValues, UserUpdateFormValues } from './schema';
 

@@ -8,7 +8,7 @@ export const useFoodList = () => {
   const options: SelectOption[] = useMemo(
     () =>
       data
-        ? Object.entries(data as Record<string, string>).map(([id, label]) => ({
+        ? Object.entries(data).map(([id, label]) => ({
             id: Number(id),
             label,
           }))
