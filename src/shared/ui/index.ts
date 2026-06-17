@@ -24,3 +24,5 @@ export type { DeleteConfirmDialogProps } from './DeleteConfirmDialog/DeleteConfi
 
 export { Breadcrumbs } from './Breadcrumbs/Breadcrumbs';
 export type { BreadcrumbsProps, BreadcrumbItem } from './Breadcrumbs/Breadcrumbs';
+
+export { MultiSelectWithAll } from './MultiSelectWithAll';

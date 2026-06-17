@@ -1,1 +1,2 @@
-export { UserForm } from './UserForm';
+export { UserCreateForm } from './UserCreateForm';
+export { UserUpdateForm } from './UserUpdateForm';

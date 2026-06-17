@@ -1,6 +1,6 @@
 import { Container } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import { UserForm } from 'widgets/user-form';
+import { UserUpdateForm } from 'widgets/user-form';
 import { useGetUserByIdQuery } from 'entities/user';
 import { Loader, ErrorAlert } from 'shared/ui';
 
@@ -28,7 +28,7 @@ export const UserEditPage = () => {
 
   return (
     <Container maxWidth="sm" sx={{ py: 3 }}>
-      <UserForm mode="update" user={user} />
+      <UserUpdateForm user={user} />
     </Container>
   );
 };
