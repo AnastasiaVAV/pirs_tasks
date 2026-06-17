@@ -1,5 +1,4 @@
 import { Provider } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -14,7 +13,7 @@ export const StoreProvider = ({ children }: { children: React.ReactNode }) => {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <LocalizationProvider dateAdapter={AdapterDateFns} locale={ru}>
-          <BrowserRouter>{children}</BrowserRouter>
+          {children}
         </LocalizationProvider>
       </ThemeProvider>
     </Provider>

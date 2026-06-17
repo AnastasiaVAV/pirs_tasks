@@ -46,23 +46,5 @@ module.exports = {
     'react/prop-types': 'off',
     'jsx-a11y/anchor-is-valid': 'off',
   },
-  overrides: [
-    {
-      files: [
-        '**/entities/**/api.ts',
-        '**/features/**/*.ts',
-        '**/widgets/**/*.tsx',
-        '**/pages/**/*.tsx',
-        '**/app/**/*.tsx',
-      ],
-      rules: {
-        '@typescript-eslint/no-unsafe-assignment': 'off',
-        '@typescript-eslint/no-unsafe-call': 'off',
-        '@typescript-eslint/no-unsafe-member-access': 'off',
-        '@typescript-eslint/no-unsafe-return': 'off',
-        '@typescript-eslint/no-unsafe-argument': 'off',
-      },
-    },
-  ],
   ignorePatterns: ['dist/', 'node_modules/', '*.config.*', '*.md'],
 };
