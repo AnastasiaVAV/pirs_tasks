@@ -1,3 +1,4 @@
+import { useState, useEffect, useCallback } from 'react';
 import {
   Table,
   TableBody,
@@ -47,6 +48,41 @@ export const UsersTable = () => {
     isLoading: isDeleting,
   } = useDeleteUser();
 
+  const [localId, setLocalId] = useState(filters.id);
+  const [localUsername, setLocalUsername] = useState(filters.username);
+  const [localEmail, setLocalEmail] = useState(filters.email);
+  const [localBirthdateStart, setLocalBirthdateStart] = useState(filters.birthdateStart);
+  const [localBirthdateEnd, setLocalBirthdateEnd] = useState(filters.birthdateEnd);
+  const [localFoodIds, setLocalFoodIds] = useState<number[]>(filters.foodIds);
+
+  useEffect(() => {
+    setLocalId(filters.id);
+    setLocalUsername(filters.username);
+    setLocalEmail(filters.email);
+    setLocalBirthdateStart(filters.birthdateStart);
+    setLocalBirthdateEnd(filters.birthdateEnd);
+    setLocalFoodIds(filters.foodIds);
+  }, [filters]);
+
+  const commitId = useCallback(() => setFilter('id', localId), [setFilter, localId]);
+  const commitUsername = useCallback(
+    () => setFilter('username', localUsername),
+    [setFilter, localUsername]
+  );
+  const commitEmail = useCallback(() => setFilter('email', localEmail), [setFilter, localEmail]);
+  const commitBirthdateStart = useCallback(
+    () => setFilter('birthdateStart', localBirthdateStart),
+    [setFilter, localBirthdateStart]
+  );
+  const commitBirthdateEnd = useCallback(
+    () => setFilter('birthdateEnd', localBirthdateEnd),
+    [setFilter, localBirthdateEnd]
+  );
+  const commitFoodIds = useCallback(
+    () => setFilter('foodIds', localFoodIds),
+    [setFilter, localFoodIds]
+  );
+
   const from = totalCount > 0 ? (page - 1) * perPage + 1 : 0;
   const to = Math.min(page * perPage, totalCount);
 
@@ -90,9 +126,9 @@ export const UsersTable = () => {
         </Typography>
       </Box>
 
-      <Paper sx={{ overflow: 'visible' }}>
+      <Paper>
         <TableContainer>
-          <Table sx={{ border: 1, borderColor: 'divider', width: 'auto' }}>
+          <Table sx={{ border: 1, borderColor: 'divider' }}>
             <TableHead>
               <TableRow sx={{ bgcolor: 'grey.100' }}>
                 <TableCell
@@ -101,7 +137,6 @@ export const UsersTable = () => {
                     fontWeight: 'bold',
                     color: 'primary.main',
                     textDecoration: 'underline',
-                    whiteSpace: 'nowrap',
                   }}
                 >
                   #
@@ -112,7 +147,6 @@ export const UsersTable = () => {
                     fontWeight: 'bold',
                     color: 'primary.main',
                     textDecoration: 'underline',
-                    whiteSpace: 'nowrap',
                   }}
                 >
                   <TableSortLabel
@@ -129,7 +163,6 @@ export const UsersTable = () => {
                     fontWeight: 'bold',
                     color: 'primary.main',
                     textDecoration: 'underline',
-                    whiteSpace: 'nowrap',
                   }}
                 >
                   Фото
@@ -140,7 +173,6 @@ export const UsersTable = () => {
                     fontWeight: 'bold',
                     color: 'primary.main',
                     textDecoration: 'underline',
-                    whiteSpace: 'nowrap',
                   }}
                 >
                   <TableSortLabel
@@ -157,7 +189,6 @@ export const UsersTable = () => {
                     fontWeight: 'bold',
                     color: 'primary.main',
                     textDecoration: 'underline',
-                    whiteSpace: 'nowrap',
                   }}
                 >
                   <TableSortLabel
@@ -174,7 +205,6 @@ export const UsersTable = () => {
                     fontWeight: 'bold',
                     color: 'primary.main',
                     textDecoration: 'underline',
-                    whiteSpace: 'nowrap',
                   }}
                 >
                   <TableSortLabel
@@ -191,7 +221,6 @@ export const UsersTable = () => {
                     fontWeight: 'bold',
                     color: 'primary.main',
                     textDecoration: 'underline',
-                    whiteSpace: 'nowrap',
                   }}
                 >
                   <TableSortLabel
@@ -208,7 +237,6 @@ export const UsersTable = () => {
                     fontWeight: 'bold',
                     color: 'primary.main',
                     textDecoration: 'underline',
-                    whiteSpace: 'nowrap',
                   }}
                 >
                   &nbsp;
@@ -221,8 +249,9 @@ export const UsersTable = () => {
                     size="small"
                     fullWidth
                     placeholder="Фильтр..."
-                    value={filters.id}
-                    onChange={(e) => setFilter('id', e.target.value)}
+                    value={localId}
+                    onChange={(e) => setLocalId(e.target.value)}
+                    onBlur={commitId}
                   />
                 </TableCell>
                 <TableCell sx={cellSx} />
@@ -231,8 +260,9 @@ export const UsersTable = () => {
                     size="small"
                     fullWidth
                     placeholder="Фильтр..."
-                    value={filters.username}
-                    onChange={(e) => setFilter('username', e.target.value)}
+                    value={localUsername}
+                    onChange={(e) => setLocalUsername(e.target.value)}
+                    onBlur={commitUsername}
                   />
                 </TableCell>
                 <TableCell sx={cellSx}>
@@ -240,8 +270,9 @@ export const UsersTable = () => {
                     size="small"
                     fullWidth
                     placeholder="Фильтр..."
-                    value={filters.email}
-                    onChange={(e) => setFilter('email', e.target.value)}
+                    value={localEmail}
+                    onChange={(e) => setLocalEmail(e.target.value)}
+                    onBlur={commitEmail}
                   />
                 </TableCell>
                 <TableCell sx={cellSx}>
@@ -250,15 +281,17 @@ export const UsersTable = () => {
                       size="small"
                       type="date"
                       sx={{ flex: 1 }}
-                      value={filters.birthdateStart}
-                      onChange={(e) => setFilter('birthdateStart', e.target.value)}
+                      value={localBirthdateStart}
+                      onChange={(e) => setLocalBirthdateStart(e.target.value)}
+                      onBlur={commitBirthdateStart}
                     />
                     <TextField
                       size="small"
                       type="date"
                       sx={{ flex: 1 }}
-                      value={filters.birthdateEnd}
-                      onChange={(e) => setFilter('birthdateEnd', e.target.value)}
+                      value={localBirthdateEnd}
+                      onChange={(e) => setLocalBirthdateEnd(e.target.value)}
+                      onBlur={commitBirthdateEnd}
                     />
                   </Box>
                 </TableCell>
@@ -268,8 +301,9 @@ export const UsersTable = () => {
                     multiple
                     fullWidth
                     displayEmpty
-                    value={filters.foodIds}
-                    onChange={(e) => setFilter('foodIds', e.target.value as number[])}
+                    value={localFoodIds}
+                    onChange={(e) => setLocalFoodIds(e.target.value as number[])}
+                    onClose={commitFoodIds}
                     renderValue={(selected) =>
                       selected.length === 0
                         ? ''
