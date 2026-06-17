@@ -3,10 +3,11 @@ import { useParams } from 'react-router-dom';
 import { UserCard } from 'widgets/user-card';
 import { ErrorAlert, Breadcrumbs } from 'shared/ui';
 
-const UserViewPage = () => {
+export const UserViewPage = () => {
   const { id } = useParams<{ id: string }>();
+  const numericId = Number(id);
 
-  if (!id) {
+  if (!id || Number.isNaN(numericId)) {
     return <ErrorAlert title="Ошибка" message="ID пользователя не указан." />;
   }
 
@@ -15,9 +16,7 @@ const UserViewPage = () => {
       <Breadcrumbs
         items={[{ label: 'Пользователи', to: '/users' }, { label: `Просмотр #${id}` }]}
       />
-      <UserCard userId={Number(id)} />
+      <UserCard userId={numericId} />
     </Container>
   );
 };
-
-export default UserViewPage;

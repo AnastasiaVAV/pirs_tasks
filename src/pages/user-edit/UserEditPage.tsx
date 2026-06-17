@@ -4,9 +4,22 @@ import { UserForm } from 'widgets/user-form';
 import { useGetUserByIdQuery } from 'entities/user';
 import { Loader, ErrorAlert, Breadcrumbs } from 'shared/ui';
 
-const UserEditPage = () => {
+export const UserEditPage = () => {
   const { id } = useParams<{ id: string }>();
-  const { data: user, isLoading, isError } = useGetUserByIdQuery(Number(id));
+  const numericId = Number(id);
+  const isValidId = id !== undefined && !Number.isNaN(numericId);
+
+  const {
+    data: user,
+    isLoading,
+    isError,
+  } = useGetUserByIdQuery(numericId, {
+    skip: !isValidId,
+  });
+
+  if (!isValidId) {
+    return <ErrorAlert title="Ошибка" message="ID пользователя не указан." />;
+  }
 
   if (isLoading) return <Loader />;
 
@@ -28,5 +41,3 @@ const UserEditPage = () => {
     </Container>
   );
 };
-
-export default UserEditPage;

@@ -1,1 +1,1 @@
-export { default as UserViewPage } from './UserViewPage';
+export { UserViewPage } from './UserViewPage';
