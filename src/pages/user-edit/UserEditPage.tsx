@@ -6,7 +6,7 @@ import { useUserIdFromParams } from 'shared/lib';
 
 export const UserEditPage = () => {
   const { numericId, isValid } = useUserIdFromParams();
-  const { data: user, isLoading, isError } = useGetUserByIdQuery(numericId);
+  const { data: user, isLoading, isError } = useGetUserByIdQuery(numericId, { skip: !isValid });
 
   if (!isValid) {
     return <ErrorAlert title="Ошибка" message="ID пользователя не указан." />;

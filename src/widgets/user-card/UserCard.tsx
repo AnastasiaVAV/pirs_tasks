@@ -16,6 +16,9 @@ import { useDeleteUser } from 'features/delete-user';
 import { useFoodList } from 'features/fetch-food-list';
 import { formatDateToDisplay, extractErrorMessage, resolveFoodNames } from 'shared/lib';
 
+const labelSx = { border: 1, borderColor: 'divider', py: 1.5, fontWeight: 'bold', width: 200 };
+const valueSx = { border: 1, borderColor: 'divider', py: 1.5 };
+
 type UserCardProps = {
   userId: number;
 };
@@ -49,9 +52,6 @@ export const UserCard = ({ userId }: UserCardProps) => {
   }
 
   const favoriteFood = resolveFoodNames(user.favorite_food_ids ?? [], foodOptions);
-
-  const labelSx = { border: 1, borderColor: 'divider', py: 1.5, fontWeight: 'bold', width: 200 };
-  const valueSx = { border: 1, borderColor: 'divider', py: 1.5 };
 
   const rows = [
     { label: 'ID', value: user.id },
