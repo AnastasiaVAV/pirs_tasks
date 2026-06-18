@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useReducer, useEffect } from 'react';
 import {
   TableRow,
   TableCell,
@@ -33,6 +33,11 @@ type UsersTableHeaderProps = {
 const headerRowSx = { bgcolor: 'grey.100' };
 const dashSx = { mx: 0.5, flexShrink: 0 };
 
+const localFiltersReducer = (state: UserFilters, action: Partial<UserFilters>): UserFilters => ({
+  ...state,
+  ...action,
+});
+
 export const UsersTableHeader = ({
   filters,
   setFilter,
@@ -40,20 +45,10 @@ export const UsersTableHeader = ({
   toggleSort,
   foodOptions,
 }: UsersTableHeaderProps) => {
-  const [localId, setLocalId] = useState(filters.id);
-  const [localUsername, setLocalUsername] = useState(filters.username);
-  const [localEmail, setLocalEmail] = useState(filters.email);
-  const [localBirthdateStart, setLocalBirthdateStart] = useState(filters.birthdateStart);
-  const [localBirthdateEnd, setLocalBirthdateEnd] = useState(filters.birthdateEnd);
-  const [localFoodIds, setLocalFoodIds] = useState<number[]>(filters.foodIds);
+  const [local, dispatch] = useReducer(localFiltersReducer, filters);
 
   useEffect(() => {
-    setLocalId(filters.id);
-    setLocalUsername(filters.username);
-    setLocalEmail(filters.email);
-    setLocalBirthdateStart(filters.birthdateStart);
-    setLocalBirthdateEnd(filters.birthdateEnd);
-    setLocalFoodIds(filters.foodIds);
+    dispatch(filters);
   }, [filters]);
 
   const idDir = getSortDirection('id');
@@ -61,6 +56,10 @@ export const UsersTableHeader = ({
   const emailDir = getSortDirection('email');
   const birthdateDir = getSortDirection('birthdate');
   const foodDir = getSortDirection('favorite_food_ids');
+
+  const handleFilterEnter = <K extends keyof UserFilters>(key: K) => {
+    setFilter(key, local[key]);
+  };
 
   return (
     <TableHead>
@@ -126,9 +125,12 @@ export const UsersTableHeader = ({
             size="small"
             fullWidth
             placeholder="Фильтр..."
-            value={localId}
-            onChange={(e) => setLocalId(e.target.value)}
-            onBlur={() => setFilter('id', localId)}
+            value={local.id}
+            onChange={(e) => dispatch({ id: e.target.value })}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') handleFilterEnter('id');
+            }}
+            onBlur={() => setFilter('id', local.id)}
           />
         </TableCell>
         <TableCell sx={cellSx} />
@@ -137,9 +139,12 @@ export const UsersTableHeader = ({
             size="small"
             fullWidth
             placeholder="Фильтр..."
-            value={localUsername}
-            onChange={(e) => setLocalUsername(e.target.value)}
-            onBlur={() => setFilter('username', localUsername)}
+            value={local.username}
+            onChange={(e) => dispatch({ username: e.target.value })}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') handleFilterEnter('username');
+            }}
+            onBlur={() => setFilter('username', local.username)}
           />
         </TableCell>
         <TableCell sx={cellSx}>
@@ -147,19 +152,22 @@ export const UsersTableHeader = ({
             size="small"
             fullWidth
             placeholder="Фильтр..."
-            value={localEmail}
-            onChange={(e) => setLocalEmail(e.target.value)}
-            onBlur={() => setFilter('email', localEmail)}
+            value={local.email}
+            onChange={(e) => dispatch({ email: e.target.value })}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') handleFilterEnter('email');
+            }}
+            onBlur={() => setFilter('email', local.email)}
           />
         </TableCell>
         <TableCell sx={cellSx}>
           <Box sx={filterBoxSx}>
             <DatePicker
               format={DISPLAY_FORMAT}
-              value={parseDateStr(localBirthdateStart)}
+              value={parseDateStr(local.birthdateStart)}
               onChange={(date: Date | null) => {
                 const value = formatDateStr(date);
-                setLocalBirthdateStart(value);
+                dispatch({ birthdateStart: value });
                 setFilter('birthdateStart', value);
               }}
               slotProps={datePickerSlotProps}
@@ -167,10 +175,10 @@ export const UsersTableHeader = ({
             <Typography sx={dashSx}>—</Typography>
             <DatePicker
               format={DISPLAY_FORMAT}
-              value={parseDateStr(localBirthdateEnd)}
+              value={parseDateStr(local.birthdateEnd)}
               onChange={(date: Date | null) => {
                 const value = formatDateStr(date);
-                setLocalBirthdateEnd(value);
+                dispatch({ birthdateEnd: value });
                 setFilter('birthdateEnd', value);
               }}
               slotProps={datePickerSlotProps}
@@ -180,9 +188,9 @@ export const UsersTableHeader = ({
         <TableCell sx={filterCellSx}>
           <MultiSelectWithAll
             options={foodOptions}
-            selectedIds={localFoodIds}
+            selectedIds={local.foodIds}
             onChange={(ids) => {
-              setLocalFoodIds(ids);
+              dispatch({ foodIds: ids });
               setFilter('foodIds', ids);
             }}
           />
