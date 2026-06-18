@@ -1,4 +1,4 @@
-import { useRef, useCallback } from 'react';
+import { useRef } from 'react';
 import { Stack, Box, Typography, TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Controller, type UseFormReturn } from 'react-hook-form';
@@ -34,31 +34,6 @@ export const UserFormFields = ({ form, isLoading, avatarProps }: UserFormFieldsP
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { options: foodOptions } = useFoodList();
 
-  const handleReplaceClick = useCallback(() => {
-    fileInputRef.current?.click();
-  }, []);
-
-  const handleFileChange = useCallback(
-    (onChange: (value: File | null) => void) => (e: React.ChangeEvent<HTMLInputElement>) => {
-      onChange(e.target.files?.[0] ?? null);
-    },
-    []
-  );
-
-  const handleDateChange = useCallback(
-    (onChange: (value: string) => void) => (date: Date | null) => {
-      onChange(date ? format(date, 'dd.MM.yyyy') : '');
-    },
-    []
-  );
-
-  const handleFoodChange = useCallback(
-    (onChange: (value: number[]) => void) => (ids: number[]) => {
-      onChange(ids);
-    },
-    []
-  );
-
   return (
     <Stack spacing={3} sx={formStackSx}>
       <Box sx={avatarBoxSx}>
@@ -77,13 +52,13 @@ export const UserFormFields = ({ form, isLoading, avatarProps }: UserFormFieldsP
                 type="file"
                 accept="image/*"
                 hidden
-                onChange={handleFileChange(field.onChange)}
+                onChange={(e) => field.onChange(e.target.files?.[0] ?? null)}
               />
               <Typography
                 variant="body2"
                 color="primary"
                 sx={replaceLinkSx}
-                onClick={handleReplaceClick}
+                onClick={() => fileInputRef.current?.click()}
               >
                 Заменить
               </Typography>
@@ -132,7 +107,9 @@ export const UserFormFields = ({ form, isLoading, avatarProps }: UserFormFieldsP
               format="dd.MM.yyyy"
               label="Дата рождения"
               value={dateValue}
-              onChange={handleDateChange(field.onChange)}
+              onChange={(date: Date | null) =>
+                field.onChange(date ? format(date, 'dd.MM.yyyy') : '')
+              }
               slotProps={{
                 textField: {
                   error: !!fieldState.error,
@@ -158,7 +135,7 @@ export const UserFormFields = ({ form, isLoading, avatarProps }: UserFormFieldsP
             <MultiSelectWithAll
               options={foodOptions}
               selectedIds={selectedIds}
-              onChange={handleFoodChange(field.onChange)}
+              onChange={(ids) => field.onChange(ids)}
               label="Любимая еда"
               error={!!fieldState.error}
               helperText={fieldState.error?.message}

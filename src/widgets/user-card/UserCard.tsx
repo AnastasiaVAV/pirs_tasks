@@ -1,4 +1,3 @@
-import { useCallback, useMemo } from 'react';
 import {
   Table,
   TableBody,
@@ -29,41 +28,34 @@ export const UserCard = ({ userId }: UserCardProps) => {
   const { data: user, isLoading, isError, error } = useGetUserByIdQuery(userId);
   const { options: foodOptions } = useFoodList();
 
-  const handleSuccess = useCallback(() => void navigate('/users'), [navigate]);
-
   const {
     requestDelete,
     confirmDelete,
     cancelDelete,
     userIdToDelete,
     isLoading: isDeleting,
-  } = useDeleteUser(handleSuccess);
-
-  const handleEdit = useCallback(() => void navigate(`/users/${userId}/edit`), [navigate, userId]);
-  const handleDelete = useCallback(() => requestDelete(userId), [requestDelete, userId]);
+  } = useDeleteUser(() => {
+    void navigate('/users');
+  });
 
   const favoriteFood = resolveFoodNames(user?.favorite_food_ids ?? [], foodOptions);
 
-  const rows = useMemo(
-    () =>
-      user
-        ? [
-            { label: 'ID', value: user.id },
-            { label: 'Имя', value: user.username },
-            {
-              label: 'Email',
-              value: <a href={`mailto:${user.email}`}>{user.email}</a>,
-            },
-            { label: 'Дата рождения', value: formatDateToDisplay(user.birthdate) },
-            { label: 'Любимая еда', value: favoriteFood || '—' },
-            {
-              label: 'Фото',
-              value: <Avatar photoId={user.photo_id} fallback={user.username} sx={avatarSx} />,
-            },
-          ]
-        : [],
-    [user, favoriteFood]
-  );
+  const rows = user
+    ? [
+        { label: 'ID', value: user.id },
+        { label: 'Имя', value: user.username },
+        {
+          label: 'Email',
+          value: <a href={`mailto:${user.email}`}>{user.email}</a>,
+        },
+        { label: 'Дата рождения', value: formatDateToDisplay(user.birthdate) },
+        { label: 'Любимая еда', value: favoriteFood || '—' },
+        {
+          label: 'Фото',
+          value: <Avatar photoId={user.photo_id} fallback={user.username} sx={avatarSx} />,
+        },
+      ]
+    : [];
 
   if (isLoading) return <Loader />;
 
@@ -82,10 +74,10 @@ export const UserCard = ({ userId }: UserCardProps) => {
   return (
     <>
       <Box sx={{ mb: 2, display: 'flex', gap: 1 }}>
-        <Button variant="contained" onClick={handleEdit}>
+        <Button variant="contained" onClick={() => void navigate(`/users/${userId}/edit`)}>
           Изменить
         </Button>
-        <Button variant="outlined" color="error" onClick={handleDelete}>
+        <Button variant="outlined" color="error" onClick={() => requestDelete(userId)}>
           Удалить
         </Button>
       </Box>

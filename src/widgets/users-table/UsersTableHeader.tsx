@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   TableRow,
   TableCell,
@@ -30,6 +30,9 @@ type UsersTableHeaderProps = {
   foodOptions: SelectOption[];
 };
 
+const headerRowSx = { bgcolor: 'grey.100' };
+const dashSx = { mx: 0.5, flexShrink: 0 };
+
 export const UsersTableHeader = ({
   filters,
   setFilter,
@@ -53,59 +56,6 @@ export const UsersTableHeader = ({
     setLocalFoodIds(filters.foodIds);
   }, [filters]);
 
-  const commitId = useCallback(() => setFilter('id', localId), [setFilter, localId]);
-  const commitUsername = useCallback(
-    () => setFilter('username', localUsername),
-    [setFilter, localUsername]
-  );
-  const commitEmail = useCallback(() => setFilter('email', localEmail), [setFilter, localEmail]);
-
-  const handleSortId = useCallback(() => toggleSort('id'), [toggleSort]);
-  const handleSortUsername = useCallback(() => toggleSort('username'), [toggleSort]);
-  const handleSortEmail = useCallback(() => toggleSort('email'), [toggleSort]);
-  const handleSortBirthdate = useCallback(() => toggleSort('birthdate'), [toggleSort]);
-  const handleSortFood = useCallback(() => toggleSort('favorite_food_ids'), [toggleSort]);
-
-  const handleIdChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => setLocalId(e.target.value),
-    []
-  );
-  const handleUsernameChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => setLocalUsername(e.target.value),
-    []
-  );
-  const handleEmailChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => setLocalEmail(e.target.value),
-    []
-  );
-
-  const handleBirthdateStartChange = useCallback(
-    (date: Date | null) => {
-      const value = formatDateStr(date);
-      setLocalBirthdateStart(value);
-      setFilter('birthdateStart', value);
-    },
-    [setFilter]
-  );
-  const handleBirthdateEndChange = useCallback(
-    (date: Date | null) => {
-      const value = formatDateStr(date);
-      setLocalBirthdateEnd(value);
-      setFilter('birthdateEnd', value);
-    },
-    [setFilter]
-  );
-  const handleFoodIdsChange = useCallback(
-    (ids: number[]) => {
-      setLocalFoodIds(ids);
-      setFilter('foodIds', ids);
-    },
-    [setFilter]
-  );
-
-  const headerRowSx = { bgcolor: 'grey.100' };
-  const dashSx = { mx: 0.5, flexShrink: 0 };
-
   const idDir = getSortDirection('id');
   const usernameDir = getSortDirection('username');
   const emailDir = getSortDirection('email');
@@ -120,7 +70,7 @@ export const UsersTableHeader = ({
           <TableSortLabel
             active={idDir !== false}
             direction={idDir || 'asc'}
-            onClick={handleSortId}
+            onClick={() => toggleSort('id')}
             sx={sortLabelSx}
           >
             ID
@@ -131,7 +81,7 @@ export const UsersTableHeader = ({
           <TableSortLabel
             active={usernameDir !== false}
             direction={usernameDir || 'asc'}
-            onClick={handleSortUsername}
+            onClick={() => toggleSort('username')}
             sx={sortLabelSx}
           >
             Имя
@@ -141,7 +91,7 @@ export const UsersTableHeader = ({
           <TableSortLabel
             active={emailDir !== false}
             direction={emailDir || 'asc'}
-            onClick={handleSortEmail}
+            onClick={() => toggleSort('email')}
             sx={sortLabelSx}
           >
             Email
@@ -151,7 +101,7 @@ export const UsersTableHeader = ({
           <TableSortLabel
             active={birthdateDir !== false}
             direction={birthdateDir || 'asc'}
-            onClick={handleSortBirthdate}
+            onClick={() => toggleSort('birthdate')}
             sx={sortLabelSx}
           >
             Дата рождения
@@ -161,7 +111,7 @@ export const UsersTableHeader = ({
           <TableSortLabel
             active={foodDir !== false}
             direction={foodDir || 'asc'}
-            onClick={handleSortFood}
+            onClick={() => toggleSort('favorite_food_ids')}
             sx={sortLabelSx}
           >
             Любимая еда
@@ -177,8 +127,8 @@ export const UsersTableHeader = ({
             fullWidth
             placeholder="Фильтр..."
             value={localId}
-            onChange={handleIdChange}
-            onBlur={commitId}
+            onChange={(e) => setLocalId(e.target.value)}
+            onBlur={() => setFilter('id', localId)}
           />
         </TableCell>
         <TableCell sx={cellSx} />
@@ -188,8 +138,8 @@ export const UsersTableHeader = ({
             fullWidth
             placeholder="Фильтр..."
             value={localUsername}
-            onChange={handleUsernameChange}
-            onBlur={commitUsername}
+            onChange={(e) => setLocalUsername(e.target.value)}
+            onBlur={() => setFilter('username', localUsername)}
           />
         </TableCell>
         <TableCell sx={cellSx}>
@@ -198,8 +148,8 @@ export const UsersTableHeader = ({
             fullWidth
             placeholder="Фильтр..."
             value={localEmail}
-            onChange={handleEmailChange}
-            onBlur={commitEmail}
+            onChange={(e) => setLocalEmail(e.target.value)}
+            onBlur={() => setFilter('email', localEmail)}
           />
         </TableCell>
         <TableCell sx={cellSx}>
@@ -207,14 +157,22 @@ export const UsersTableHeader = ({
             <DatePicker
               format="dd.MM.yyyy"
               value={parseDateStr(localBirthdateStart)}
-              onChange={handleBirthdateStartChange}
+              onChange={(date: Date | null) => {
+                const value = formatDateStr(date);
+                setLocalBirthdateStart(value);
+                setFilter('birthdateStart', value);
+              }}
               slotProps={datePickerSlotProps}
             />
             <Typography sx={dashSx}>—</Typography>
             <DatePicker
               format="dd.MM.yyyy"
               value={parseDateStr(localBirthdateEnd)}
-              onChange={handleBirthdateEndChange}
+              onChange={(date: Date | null) => {
+                const value = formatDateStr(date);
+                setLocalBirthdateEnd(value);
+                setFilter('birthdateEnd', value);
+              }}
               slotProps={datePickerSlotProps}
             />
           </Box>
@@ -223,7 +181,10 @@ export const UsersTableHeader = ({
           <MultiSelectWithAll
             options={foodOptions}
             selectedIds={localFoodIds}
-            onChange={handleFoodIdsChange}
+            onChange={(ids) => {
+              setLocalFoodIds(ids);
+              setFilter('foodIds', ids);
+            }}
           />
         </TableCell>
         <TableCell sx={cellSx} />

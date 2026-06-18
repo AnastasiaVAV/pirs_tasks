@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCreateUserForm } from 'features/create-user';
 import { UserFormFields } from './UserFormFields';
@@ -10,13 +9,8 @@ export const UserCreateForm = () => {
     void navigate('/users');
   });
 
-  const handleSubmit = useCallback(
-    (e: React.FormEvent) => void form.handleSubmit(onSubmit)(e),
-    [form, onSubmit]
-  );
-
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={(e) => void form.handleSubmit(onSubmit)(e)}>
       <UserFormFields form={form} isLoading={isLoading} />
     </form>
   );
