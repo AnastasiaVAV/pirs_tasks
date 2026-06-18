@@ -17,4 +17,15 @@ export type { BreadcrumbsProps, BreadcrumbItem } from './Breadcrumbs/Breadcrumbs
 
 export { MultiSelectWithAll } from './MultiSelectWithAll';
 
-export { cellSx, headerCellSx, TABLE_COLUMNS_COUNT } from './tableStyles';
+export {
+  cellSx,
+  headerCellSx,
+  filterCellSx,
+  avatarSx,
+  iconButtonSx,
+  sortLabelSx,
+  filterBoxSx,
+  datePickerSlotProps,
+  tableSx,
+  TABLE_COLUMNS_COUNT,
+} from './tableStyles';

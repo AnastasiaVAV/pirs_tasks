@@ -1,5 +1,5 @@
 import { Table, TableBody, TableCell, TableContainer, TableRow, Paper } from '@mui/material';
-import { Loader, ErrorAlert, DeleteConfirmDialog, TABLE_COLUMNS_COUNT } from 'shared/ui';
+import { Loader, ErrorAlert, DeleteConfirmDialog, TABLE_COLUMNS_COUNT, tableSx } from 'shared/ui';
 import { extractErrorMessage } from 'shared/lib';
 import { useUsersList } from 'features/fetch-users';
 import { useDeleteUser } from 'features/delete-user';
@@ -44,7 +44,7 @@ export const UsersTable = () => {
 
       <Paper>
         <TableContainer>
-          <Table sx={{ border: 1, borderColor: 'divider' }}>
+          <Table sx={tableSx}>
             <UsersTableHeader
               filters={filters}
               setFilter={setFilter}

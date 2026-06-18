@@ -10,7 +10,7 @@ import {
   Button,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { Avatar, Loader, ErrorAlert, DeleteConfirmDialog } from 'shared/ui';
+import { Avatar, Loader, ErrorAlert, DeleteConfirmDialog, avatarSx, tableSx } from 'shared/ui';
 import { useGetUserByIdQuery } from 'entities/user';
 import { useDeleteUser } from 'features/delete-user';
 import { useFoodList } from 'features/fetch-food-list';
@@ -64,9 +64,7 @@ export const UserCard = ({ userId }: UserCardProps) => {
     { label: 'Любимая еда', value: favoriteFood || '—' },
     {
       label: 'Фото',
-      value: (
-        <Avatar photoId={user.photo_id} fallback={user.username} sx={{ width: 150, height: 150 }} />
-      ),
+      value: <Avatar photoId={user.photo_id} fallback={user.username} sx={avatarSx} />,
     },
   ];
 
@@ -82,7 +80,7 @@ export const UserCard = ({ userId }: UserCardProps) => {
       </Box>
 
       <TableContainer component={Paper}>
-        <Table sx={{ border: 1, borderColor: 'divider' }}>
+        <Table sx={tableSx}>
           <TableBody>
             {rows.map((row, index) => (
               <TableRow
