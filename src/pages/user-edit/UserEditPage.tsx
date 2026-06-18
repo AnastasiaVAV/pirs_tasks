@@ -4,6 +4,8 @@ import { useGetUserByIdQuery } from 'entities/user';
 import { Loader, ErrorAlert, Breadcrumbs } from 'shared/ui';
 import { useUserIdFromParams } from 'shared/lib';
 
+const userEditBaseBreadcrumbs = [{ label: 'Пользователи', to: '/users' }];
+
 export const UserEditPage = () => {
   const { numericId, isValid } = useUserIdFromParams();
   const { data: user, isLoading, isError } = useGetUserByIdQuery(numericId, { skip: !isValid });
@@ -27,7 +29,7 @@ export const UserEditPage = () => {
     <Container maxWidth="sm" sx={{ py: 3 }}>
       <Breadcrumbs
         items={[
-          { label: 'Пользователи', to: '/users' },
+          ...userEditBaseBreadcrumbs,
           { label: user.username, to: `/users/${numericId}` },
           { label: 'Редактирование' },
         ]}

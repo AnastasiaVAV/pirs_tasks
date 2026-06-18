@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useCallback } from 'react';
 import { Stack, Box, Typography, TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Controller, type UseFormReturn } from 'react-hook-form';
@@ -6,6 +6,19 @@ import { parse, format } from 'date-fns';
 import { Avatar, MultiSelectWithAll } from 'shared/ui';
 import { useFoodList } from 'features/fetch-food-list';
 import { FormActions } from './FormActions';
+
+const formStackSx = { mt: '30px' };
+const avatarBoxSx = {
+  display: 'flex',
+  alignItems: 'center' as const,
+  flexDirection: 'column' as const,
+};
+const avatarFieldSx = { width: 150, height: 150 };
+const replaceLinkSx = {
+  cursor: 'pointer' as const,
+  mt: 0.5,
+  '&:hover': { textDecoration: 'underline' },
+};
 
 type UserFormFieldsProps = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -21,17 +34,38 @@ export const UserFormFields = ({ form, isLoading, avatarProps }: UserFormFieldsP
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { options: foodOptions } = useFoodList();
 
-  const handleReplaceClick = () => {
+  const handleReplaceClick = useCallback(() => {
     fileInputRef.current?.click();
-  };
+  }, []);
+
+  const handleFileChange = useCallback(
+    (onChange: (value: File | null) => void) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      onChange(e.target.files?.[0] ?? null);
+    },
+    []
+  );
+
+  const handleDateChange = useCallback(
+    (onChange: (value: string) => void) => (date: Date | null) => {
+      onChange(date ? format(date, 'dd.MM.yyyy') : '');
+    },
+    []
+  );
+
+  const handleFoodChange = useCallback(
+    (onChange: (value: number[]) => void) => (ids: number[]) => {
+      onChange(ids);
+    },
+    []
+  );
 
   return (
-    <Stack spacing={3} sx={{ mt: '30px' }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+    <Stack spacing={3} sx={formStackSx}>
+      <Box sx={avatarBoxSx}>
         <Avatar
           photoId={avatarProps?.photoId}
           fallback={avatarProps?.fallback}
-          sx={{ width: 150, height: 150 }}
+          sx={avatarFieldSx}
         />
         <Controller
           name="upload_photo"
@@ -43,12 +77,12 @@ export const UserFormFields = ({ form, isLoading, avatarProps }: UserFormFieldsP
                 type="file"
                 accept="image/*"
                 hidden
-                onChange={(e) => field.onChange(e.target.files?.[0] ?? null)}
+                onChange={handleFileChange(field.onChange)}
               />
               <Typography
                 variant="body2"
                 color="primary"
-                sx={{ cursor: 'pointer', mt: 0.5, '&:hover': { textDecoration: 'underline' } }}
+                sx={replaceLinkSx}
                 onClick={handleReplaceClick}
               >
                 Заменить
@@ -98,9 +132,7 @@ export const UserFormFields = ({ form, isLoading, avatarProps }: UserFormFieldsP
               format="dd.MM.yyyy"
               label="Дата рождения"
               value={dateValue}
-              onChange={(date: Date | null) =>
-                field.onChange(date ? format(date, 'dd.MM.yyyy') : '')
-              }
+              onChange={handleDateChange(field.onChange)}
               slotProps={{
                 textField: {
                   error: !!fieldState.error,
@@ -126,7 +158,7 @@ export const UserFormFields = ({ form, isLoading, avatarProps }: UserFormFieldsP
             <MultiSelectWithAll
               options={foodOptions}
               selectedIds={selectedIds}
-              onChange={(ids) => field.onChange(ids)}
+              onChange={handleFoodChange(field.onChange)}
               label="Любимая еда"
               error={!!fieldState.error}
               helperText={fieldState.error?.message}

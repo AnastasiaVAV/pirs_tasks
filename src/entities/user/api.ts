@@ -20,13 +20,12 @@ export const userApi = baseApi.injectEndpoints({
             : {},
         };
       },
-      providesTags: (result) =>
-        result?.data
-          ? [
-              ...result.data.map(({ id }) => ({ type: 'User' as const, id })),
-              { type: 'User', id: 'LIST' },
-            ]
-          : [{ type: 'User', id: 'LIST' }],
+      providesTags: (result) => {
+        const tags = result?.data
+          ? result.data.map(({ id }) => ({ type: 'User' as const, id }))
+          : [];
+        return [...tags, { type: 'User', id: 'LIST' }];
+      },
     }),
 
     getUserById: builder.query<User, number>({

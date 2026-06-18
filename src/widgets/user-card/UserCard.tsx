@@ -1,3 +1,4 @@
+import { useCallback, useMemo } from 'react';
 import {
   Table,
   TableBody,
@@ -27,15 +28,42 @@ export const UserCard = ({ userId }: UserCardProps) => {
   const navigate = useNavigate();
   const { data: user, isLoading, isError, error } = useGetUserByIdQuery(userId);
   const { options: foodOptions } = useFoodList();
+
+  const handleSuccess = useCallback(() => void navigate('/users'), [navigate]);
+
   const {
     requestDelete,
     confirmDelete,
     cancelDelete,
     userIdToDelete,
     isLoading: isDeleting,
-  } = useDeleteUser(() => {
-    void navigate('/users');
-  });
+  } = useDeleteUser(handleSuccess);
+
+  const handleEdit = useCallback(() => void navigate(`/users/${userId}/edit`), [navigate, userId]);
+  const handleDelete = useCallback(() => requestDelete(userId), [requestDelete, userId]);
+
+  const favoriteFood = resolveFoodNames(user?.favorite_food_ids ?? [], foodOptions);
+
+  const rows = useMemo(
+    () =>
+      user
+        ? [
+            { label: 'ID', value: user.id },
+            { label: 'Имя', value: user.username },
+            {
+              label: 'Email',
+              value: <a href={`mailto:${user.email}`}>{user.email}</a>,
+            },
+            { label: 'Дата рождения', value: formatDateToDisplay(user.birthdate) },
+            { label: 'Любимая еда', value: favoriteFood || '—' },
+            {
+              label: 'Фото',
+              value: <Avatar photoId={user.photo_id} fallback={user.username} sx={avatarSx} />,
+            },
+          ]
+        : [],
+    [user, favoriteFood]
+  );
 
   if (isLoading) return <Loader />;
 
@@ -51,30 +79,13 @@ export const UserCard = ({ userId }: UserCardProps) => {
     );
   }
 
-  const favoriteFood = resolveFoodNames(user.favorite_food_ids ?? [], foodOptions);
-
-  const rows = [
-    { label: 'ID', value: user.id },
-    { label: 'Имя', value: user.username },
-    {
-      label: 'Email',
-      value: <a href={`mailto:${user.email}`}>{user.email}</a>,
-    },
-    { label: 'Дата рождения', value: formatDateToDisplay(user.birthdate) },
-    { label: 'Любимая еда', value: favoriteFood || '—' },
-    {
-      label: 'Фото',
-      value: <Avatar photoId={user.photo_id} fallback={user.username} sx={avatarSx} />,
-    },
-  ];
-
   return (
     <>
       <Box sx={{ mb: 2, display: 'flex', gap: 1 }}>
-        <Button variant="contained" onClick={() => void navigate(`/users/${userId}/edit`)}>
+        <Button variant="contained" onClick={handleEdit}>
           Изменить
         </Button>
-        <Button variant="outlined" color="error" onClick={() => requestDelete(userId)}>
+        <Button variant="outlined" color="error" onClick={handleDelete}>
           Удалить
         </Button>
       </Box>

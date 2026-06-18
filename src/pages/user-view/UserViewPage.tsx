@@ -3,6 +3,8 @@ import { UserCard } from 'widgets/user-card';
 import { ErrorAlert, Breadcrumbs } from 'shared/ui';
 import { useUserIdFromParams } from 'shared/lib';
 
+const userViewBaseBreadcrumbs = [{ label: 'Пользователи', to: '/users' }];
+
 export const UserViewPage = () => {
   const { id, numericId, isValid } = useUserIdFromParams();
 
@@ -12,7 +14,7 @@ export const UserViewPage = () => {
 
   return (
     <Container maxWidth="lg" sx={{ py: 3 }}>
-      <Breadcrumbs items={[{ label: 'Пользователи', to: '/users' }, { label: id! }]} />
+      <Breadcrumbs items={[...userViewBaseBreadcrumbs, { label: id! }]} />
       <UserCard userId={numericId} />
     </Container>
   );

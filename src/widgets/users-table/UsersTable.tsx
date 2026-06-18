@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableRow, Paper } from '@mui/material';
 import { Loader, ErrorAlert, DeleteConfirmDialog, TABLE_COLUMNS_COUNT, tableSx } from 'shared/ui';
 import { extractErrorMessage } from 'shared/lib';
@@ -32,6 +33,8 @@ export const UsersTable = () => {
     isLoading: isDeleting,
   } = useDeleteUser();
 
+  const handleConfirmDelete = useCallback(() => void confirmDelete(), [confirmDelete]);
+
   if (isLoading) return <Loader />;
 
   if (isError) {
@@ -62,7 +65,7 @@ export const UsersTable = () => {
                   requestDelete={requestDelete}
                 />
               ))}
-              {users.length === 0 && (
+              {users.length === 0 ? (
                 <TableRow>
                   <TableCell
                     colSpan={TABLE_COLUMNS_COUNT}
@@ -71,7 +74,7 @@ export const UsersTable = () => {
                     Нет данных
                   </TableCell>
                 </TableRow>
-              )}
+              ) : null}
             </TableBody>
           </Table>
         </TableContainer>
@@ -81,7 +84,7 @@ export const UsersTable = () => {
         open={userIdToDelete !== null}
         message="Вы уверены, что хотите удалить пользователя?"
         isLoading={isDeleting}
-        onConfirm={() => void confirmDelete()}
+        onConfirm={handleConfirmDelete}
         onCancel={cancelDelete}
       />
     </>

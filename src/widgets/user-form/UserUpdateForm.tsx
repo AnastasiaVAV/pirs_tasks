@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUpdateUserForm } from 'features/update-user';
 import type { User } from 'entities/user';
@@ -16,8 +17,13 @@ export const UserUpdateForm = ({ user, onSuccess }: UserUpdateFormProps) => {
     onSuccess?.();
   });
 
+  const handleSubmit = useCallback(
+    (e: React.FormEvent) => void form.handleSubmit(onSubmit as never)(e),
+    [form, onSubmit]
+  );
+
   return (
-    <form onSubmit={(e) => void form.handleSubmit(onSubmit as never)(e)}>
+    <form onSubmit={handleSubmit}>
       <UserFormFields
         form={form}
         isLoading={isLoading}

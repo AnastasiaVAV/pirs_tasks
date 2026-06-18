@@ -1,3 +1,4 @@
+import { useCallback, useMemo } from 'react';
 import { Checkbox, TextField, Autocomplete } from '@mui/material';
 import type { SelectOption } from '../SelectOption';
 
@@ -13,6 +14,8 @@ type MultiSelectWithAllProps = {
   helperText?: string;
 };
 
+const selectAllOption = { id: SELECT_ALL_ID, label: 'Выбрать все' };
+
 export const MultiSelectWithAll = ({
   options,
   selectedIds,
@@ -22,47 +25,74 @@ export const MultiSelectWithAll = ({
   error,
   helperText,
 }: MultiSelectWithAllProps) => {
-  const selectedIdSet = new Set(selectedIds);
-  const allOptions = [{ id: SELECT_ALL_ID, label: 'Выбрать все' }, ...options];
+  const selectedIdSet = useMemo(() => new Set(selectedIds), [selectedIds]);
+  const allOptions = useMemo(() => [selectAllOption, ...options], [options]);
   const allSelected = options.length > 0 && selectedIds.length === options.length;
 
-  const selectedOptions = options.filter((opt) => selectedIdSet.has(opt.id));
+  const selectedOptions = useMemo(
+    () => options.filter((opt) => selectedIdSet.has(opt.id)),
+    [options, selectedIdSet]
+  );
+
+  const getOptionLabel = useCallback(
+    (opt: SelectOption) => (opt.id === SELECT_ALL_ID ? 'Выбрать все' : opt.label),
+    []
+  );
+
+  const isOptionEqualToValue = useCallback(
+    (opt: SelectOption, val: SelectOption) => opt.id === val.id,
+    []
+  );
+
+  const handleAutocompleteChange = useCallback(
+    (_: unknown, value: SelectOption[]) => {
+      const hasSelectAll = value.some((v) => v.id === SELECT_ALL_ID);
+      if (hasSelectAll) {
+        onChange(options.map((o) => o.id));
+      } else {
+        onChange(value.map((v) => v.id));
+      }
+    },
+    [onChange, options]
+  );
+
+  const renderOption = useCallback(
+    (props: React.HTMLAttributes<HTMLLIElement>, opt: SelectOption) => {
+      const isChecked = opt.id === SELECT_ALL_ID ? allSelected : selectedIdSet.has(opt.id);
+      return (
+        <li {...props} key={opt.id}>
+          <Checkbox checked={isChecked} sx={{ mr: 1 }} />
+          {opt.label}
+        </li>
+      );
+    },
+    [allSelected, selectedIdSet]
+  );
+
+  const renderInput = useCallback(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (params: any) => (
+      <TextField
+        {...params}
+        label={label}
+        placeholder={placeholder}
+        error={error}
+        helperText={helperText}
+      />
+    ),
+    [label, placeholder, error, helperText]
+  );
 
   return (
     <Autocomplete
       multiple
       options={allOptions}
-      value={
-        allSelected ? [{ id: SELECT_ALL_ID, label: 'Выбрать все' }, ...options] : selectedOptions
-      }
-      getOptionLabel={(opt) => (opt.id === SELECT_ALL_ID ? 'Выбрать все' : opt.label)}
-      isOptionEqualToValue={(opt, val) => opt.id === val.id}
-      onChange={(_, value) => {
-        const hasSelectAll = value.some((v) => v.id === SELECT_ALL_ID);
-        if (hasSelectAll) {
-          onChange(options.map((o) => o.id));
-        } else {
-          onChange(value.map((v) => v.id));
-        }
-      }}
-      renderOption={(props, opt) => {
-        const isChecked = opt.id === SELECT_ALL_ID ? allSelected : selectedIdSet.has(opt.id);
-        return (
-          <li {...props} key={opt.id}>
-            <Checkbox checked={isChecked} sx={{ mr: 1 }} />
-            {opt.label}
-          </li>
-        );
-      }}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          label={label}
-          placeholder={placeholder}
-          error={error}
-          helperText={helperText}
-        />
-      )}
+      value={allSelected ? [selectAllOption, ...options] : selectedOptions}
+      getOptionLabel={getOptionLabel}
+      isOptionEqualToValue={isOptionEqualToValue}
+      onChange={handleAutocompleteChange}
+      renderOption={renderOption}
+      renderInput={renderInput}
     />
   );
 };

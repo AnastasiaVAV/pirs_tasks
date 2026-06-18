@@ -106,14 +106,20 @@ export const UsersTableHeader = ({
   const headerRowSx = { bgcolor: 'grey.100' };
   const dashSx = { mx: 0.5, flexShrink: 0 };
 
+  const idDir = getSortDirection('id');
+  const usernameDir = getSortDirection('username');
+  const emailDir = getSortDirection('email');
+  const birthdateDir = getSortDirection('birthdate');
+  const foodDir = getSortDirection('favorite_food_ids');
+
   return (
     <TableHead>
       <TableRow sx={headerRowSx}>
         <TableCell sx={headerCellSx}>#</TableCell>
         <TableCell sx={headerCellSx}>
           <TableSortLabel
-            active={getSortDirection('id') !== false}
-            direction={getSortDirection('id') || 'asc'}
+            active={idDir !== false}
+            direction={idDir || 'asc'}
             onClick={handleSortId}
             sx={sortLabelSx}
           >
@@ -123,8 +129,8 @@ export const UsersTableHeader = ({
         <TableCell sx={headerCellSx}>Фото</TableCell>
         <TableCell sx={headerCellSx}>
           <TableSortLabel
-            active={getSortDirection('username') !== false}
-            direction={getSortDirection('username') || 'asc'}
+            active={usernameDir !== false}
+            direction={usernameDir || 'asc'}
             onClick={handleSortUsername}
             sx={sortLabelSx}
           >
@@ -133,8 +139,8 @@ export const UsersTableHeader = ({
         </TableCell>
         <TableCell sx={headerCellSx}>
           <TableSortLabel
-            active={getSortDirection('email') !== false}
-            direction={getSortDirection('email') || 'asc'}
+            active={emailDir !== false}
+            direction={emailDir || 'asc'}
             onClick={handleSortEmail}
             sx={sortLabelSx}
           >
@@ -143,8 +149,8 @@ export const UsersTableHeader = ({
         </TableCell>
         <TableCell sx={headerCellSx}>
           <TableSortLabel
-            active={getSortDirection('birthdate') !== false}
-            direction={getSortDirection('birthdate') || 'asc'}
+            active={birthdateDir !== false}
+            direction={birthdateDir || 'asc'}
             onClick={handleSortBirthdate}
             sx={sortLabelSx}
           >
@@ -153,8 +159,8 @@ export const UsersTableHeader = ({
         </TableCell>
         <TableCell sx={headerCellSx}>
           <TableSortLabel
-            active={getSortDirection('favorite_food_ids') !== false}
-            direction={getSortDirection('favorite_food_ids') || 'asc'}
+            active={foodDir !== false}
+            direction={foodDir || 'asc'}
             onClick={handleSortFood}
             sx={sortLabelSx}
           >
