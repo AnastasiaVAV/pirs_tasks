@@ -28,7 +28,7 @@ export const buildUserFormData = (values: {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const handleServerErrors = (err: unknown, form: UseFormReturn<any>) => {
-  if (err && typeof err === 'object' && 'data' in err) {
+  if (err && typeof err === 'object' && 'data' in err && err.data && typeof err.data === 'object') {
     const data = err.data as Record<string, string[]>;
     Object.entries(data).forEach(([field, messages]) => {
       if (field in form.getValues()) {

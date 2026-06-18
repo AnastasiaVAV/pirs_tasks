@@ -34,6 +34,7 @@ export const UserCard = ({ userId }: UserCardProps) => {
     cancelDelete,
     userIdToDelete,
     isLoading: isDeleting,
+    error: deleteError,
   } = useDeleteUser(() => {
     void navigate('/users');
   });
@@ -107,6 +108,8 @@ export const UserCard = ({ userId }: UserCardProps) => {
         onConfirm={() => void confirmDelete()}
         onCancel={cancelDelete}
       />
+
+      {deleteError && <ErrorAlert message={deleteError} />}
     </>
   );
 };

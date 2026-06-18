@@ -17,9 +17,9 @@ export const UserUpdateForm = ({ user, onSuccess }: UserUpdateFormProps) => {
   });
 
   return (
-    <form onSubmit={(e) => void form.handleSubmit(onSubmit as never)(e)}>
+    <form onSubmit={(e) => void form.handleSubmit(onSubmit)(e)}>
       <UserFormFields
-        form={form}
+        control={form.control}
         isLoading={isLoading}
         avatarProps={{ photoId: user.photo_id, fallback: user.username }}
       />

@@ -30,6 +30,7 @@ export const UsersTable = () => {
     confirmDelete,
     cancelDelete,
     isLoading: isDeleting,
+    error: deleteError,
   } = useDeleteUser();
 
   if (isLoading) return <Loader />;
@@ -84,6 +85,8 @@ export const UsersTable = () => {
         onConfirm={() => void confirmDelete()}
         onCancel={cancelDelete}
       />
+
+      {deleteError && <ErrorAlert message={deleteError} />}
     </>
   );
 };

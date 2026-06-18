@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { Stack, Box, Typography, TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { Controller, type UseFormReturn } from 'react-hook-form';
+import { Controller, type Control, type FieldPath, type FieldValues } from 'react-hook-form';
 import { parse, format } from 'date-fns';
 import { Avatar, MultiSelectWithAll } from 'shared/ui';
 import { useFoodList } from 'features/fetch-food-list';
@@ -20,9 +20,8 @@ const replaceLinkSx = {
   '&:hover': { textDecoration: 'underline' },
 };
 
-type UserFormFieldsProps = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  form: UseFormReturn<any>;
+type UserFormFieldsProps<T extends FieldValues> = {
+  control: Control<T>;
   isLoading: boolean;
   avatarProps?: {
     photoId?: number | null;
@@ -30,7 +29,11 @@ type UserFormFieldsProps = {
   };
 };
 
-export const UserFormFields = ({ form, isLoading, avatarProps }: UserFormFieldsProps) => {
+export const UserFormFields = <T extends FieldValues>({
+  control,
+  isLoading,
+  avatarProps,
+}: UserFormFieldsProps<T>) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { options: foodOptions } = useFoodList();
 
@@ -43,8 +46,8 @@ export const UserFormFields = ({ form, isLoading, avatarProps }: UserFormFieldsP
           sx={avatarFieldSx}
         />
         <Controller
-          name="upload_photo"
-          control={form.control}
+          name={'upload_photo' as FieldPath<T>}
+          control={control}
           render={({ field }) => (
             <>
               <input
@@ -68,8 +71,8 @@ export const UserFormFields = ({ form, isLoading, avatarProps }: UserFormFieldsP
       </Box>
 
       <Controller
-        name="username"
-        control={form.control}
+        name={'username' as FieldPath<T>}
+        control={control}
         render={({ field, fieldState }) => (
           <TextField
             {...field}
@@ -82,8 +85,8 @@ export const UserFormFields = ({ form, isLoading, avatarProps }: UserFormFieldsP
       />
 
       <Controller
-        name="email"
-        control={form.control}
+        name={'email' as FieldPath<T>}
+        control={control}
         render={({ field, fieldState }) => (
           <TextField
             {...field}
@@ -96,11 +99,12 @@ export const UserFormFields = ({ form, isLoading, avatarProps }: UserFormFieldsP
       />
 
       <Controller
-        name="birthdate"
-        control={form.control}
+        name={'birthdate' as FieldPath<T>}
+        control={control}
         render={({ field, fieldState }) => {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-          const dateValue = field.value ? parse(field.value, 'dd.MM.yyyy', new Date()) : null;
+          const dateValue = field.value
+            ? parse(String(field.value), 'dd.MM.yyyy', new Date())
+            : null;
 
           return (
             <DatePicker
@@ -123,11 +127,11 @@ export const UserFormFields = ({ form, isLoading, avatarProps }: UserFormFieldsP
       />
 
       <Controller
-        name="favorite_food_ids"
-        control={form.control}
+        name={'favorite_food_ids' as FieldPath<T>}
+        control={control}
         render={({ field, fieldState }) => {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-          const selectedIds: number[] = (field.value ?? []).filter(
+          const value = field.value as unknown;
+          const selectedIds: number[] = (Array.isArray(value) ? value : []).filter(
             (v: unknown): v is number => v != null
           );
 

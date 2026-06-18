@@ -38,10 +38,10 @@ export const UsersTableRow = ({ user, index, foodOptions, requestDelete }: Users
         {resolveFoodNames(user.favorite_food_ids, foodOptions) || '—'}
       </TableCell>
       <TableCell sx={cellSx}>
-        <IconButton size="small" sx={iconButtonSx} onClick={handleView} title="Просмотр">
+        <IconButton size="small" sx={iconButtonSx} onClick={handleView} aria-label="Просмотр">
           <Eye size={16} />
         </IconButton>
-        <IconButton size="small" sx={iconButtonSx} onClick={handleEdit} title="Редактировать">
+        <IconButton size="small" sx={iconButtonSx} onClick={handleEdit} aria-label="Редактировать">
           <Pencil size={16} />
         </IconButton>
         <IconButton
@@ -49,7 +49,7 @@ export const UsersTableRow = ({ user, index, foodOptions, requestDelete }: Users
           sx={iconButtonSx}
           color="error"
           onClick={handleDelete}
-          title="Удалить"
+          aria-label="Удалить"
         >
           <Trash2 size={16} />
         </IconButton>

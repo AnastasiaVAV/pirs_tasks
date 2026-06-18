@@ -41,7 +41,7 @@ module.exports = {
       },
     ],
     '@typescript-eslint/consistent-type-imports': 'error',
-    '@typescript-eslint/no-explicit-any': 'warn',
+    '@typescript-eslint/no-explicit-any': 'error',
     'react/react-in-jsx-scope': 'off',
     'react/prop-types': 'off',
     'jsx-a11y/anchor-is-valid': 'off',

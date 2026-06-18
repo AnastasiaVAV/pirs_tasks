@@ -66,8 +66,7 @@ export const MultiSelectWithAll = ({
           </li>
         );
       }}
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      renderInput={(params: any) => (
+      renderInput={(params) => (
         <TextField
           {...params}
           label={label}

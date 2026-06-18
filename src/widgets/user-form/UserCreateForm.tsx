@@ -11,7 +11,7 @@ export const UserCreateForm = () => {
 
   return (
     <form onSubmit={(e) => void form.handleSubmit(onSubmit)(e)}>
-      <UserFormFields form={form} isLoading={isLoading} />
+      <UserFormFields control={form.control} isLoading={isLoading} />
     </form>
   );
 };

@@ -1,6 +1,6 @@
 import { Container } from '@mui/material';
 import { UserUpdateForm } from 'widgets/user-form';
-import { useGetUserByIdQuery } from 'entities/user';
+import { useUserById } from 'features/fetch-user';
 import { Loader, ErrorAlert, Breadcrumbs } from 'shared/ui';
 import { useUserIdFromParams } from 'shared/lib';
 
@@ -8,7 +8,7 @@ const userEditBaseBreadcrumbs = [{ label: 'Пользователи', to: '/user
 
 export const UserEditPage = () => {
   const { numericId, isValid } = useUserIdFromParams();
-  const { data: user, isLoading, isError } = useGetUserByIdQuery(numericId, { skip: !isValid });
+  const { user, isLoading, isError } = useUserById(numericId, { skip: !isValid });
 
   if (!isValid) {
     return <ErrorAlert title="Ошибка" message="ID пользователя не указан." />;

@@ -34,7 +34,7 @@ const buildParams = (
 
 export const useUsersList = () => {
   const [page, setPage] = useState(DEFAULT_PAGE);
-  const [perPage] = useState(DEFAULT_PER_PAGE);
+  const perPage = DEFAULT_PER_PAGE;
   const [filters, setFilters] = useState<UserFilters>(DEFAULT_FILTERS);
   const [sort, setSort] = useState<string>('');
 

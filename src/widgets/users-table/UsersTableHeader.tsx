@@ -18,7 +18,7 @@ import {
   datePickerSlotProps,
   MultiSelectWithAll,
 } from 'shared/ui';
-import { parseDateStr, formatDateStr } from 'shared/lib';
+import { parseDateStr, formatDateStr, DISPLAY_FORMAT } from 'shared/lib';
 import type { SelectOption } from 'shared/ui';
 import type { UserFilters, SortField } from 'features/fetch-users';
 
@@ -155,7 +155,7 @@ export const UsersTableHeader = ({
         <TableCell sx={cellSx}>
           <Box sx={filterBoxSx}>
             <DatePicker
-              format="dd.MM.yyyy"
+              format={DISPLAY_FORMAT}
               value={parseDateStr(localBirthdateStart)}
               onChange={(date: Date | null) => {
                 const value = formatDateStr(date);
@@ -166,7 +166,7 @@ export const UsersTableHeader = ({
             />
             <Typography sx={dashSx}>—</Typography>
             <DatePicker
-              format="dd.MM.yyyy"
+              format={DISPLAY_FORMAT}
               value={parseDateStr(localBirthdateEnd)}
               onChange={(date: Date | null) => {
                 const value = formatDateStr(date);
