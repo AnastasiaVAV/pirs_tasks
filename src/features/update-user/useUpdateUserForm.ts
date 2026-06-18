@@ -6,7 +6,7 @@ import type { UserUpdateFormValues, User } from 'entities/user';
 import { buildUserFormData, handleServerErrors } from 'shared/lib';
 
 export const useUpdateUserForm = (user: User, onSuccess?: () => void) => {
-  const [updateUser, { isLoading, error }] = useUpdateUserMutation();
+  const [updateUser] = useUpdateUserMutation();
   const prevUserIdRef = useRef(user.id);
 
   const form = useForm<UserUpdateFormValues>({
@@ -48,5 +48,5 @@ export const useUpdateUserForm = (user: User, onSuccess?: () => void) => {
     [updateUser, user.id, form, onSuccess]
   );
 
-  return { form, onSubmit, isLoading, error };
+  return { form, onSubmit, isSubmitting: form.formState.isSubmitting, error: undefined };
 };

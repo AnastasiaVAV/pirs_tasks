@@ -11,7 +11,7 @@ type UserUpdateFormProps = {
 export const UserUpdateForm = ({ user, onSuccess }: UserUpdateFormProps) => {
   const navigate = useNavigate();
 
-  const { form, onSubmit, isLoading } = useUpdateUserForm(user, () => {
+  const { form, onSubmit, isSubmitting } = useUpdateUserForm(user, () => {
     void navigate(`/users/${user.id}`);
     onSuccess?.();
   });
@@ -20,7 +20,7 @@ export const UserUpdateForm = ({ user, onSuccess }: UserUpdateFormProps) => {
     <form onSubmit={(e) => void form.handleSubmit(onSubmit)(e)}>
       <UserFormFields
         control={form.control}
-        isLoading={isLoading}
+        isLoading={isSubmitting}
         avatarProps={{ photoId: user.photo_id, fallback: user.username }}
       />
     </form>

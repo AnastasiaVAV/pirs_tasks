@@ -6,7 +6,7 @@ import type { UserCreateFormValues } from 'entities/user';
 import { buildUserFormData, handleServerErrors } from 'shared/lib';
 
 export const useCreateUserForm = (onSuccess?: () => void) => {
-  const [createUser, { isLoading, error }] = useCreateUserMutation();
+  const [createUser] = useCreateUserMutation();
 
   const form = useForm<UserCreateFormValues>({
     mode: 'onBlur',
@@ -34,5 +34,5 @@ export const useCreateUserForm = (onSuccess?: () => void) => {
     [createUser, form, onSuccess]
   );
 
-  return { form, onSubmit, isLoading, error };
+  return { form, onSubmit, isSubmitting: form.formState.isSubmitting };
 };

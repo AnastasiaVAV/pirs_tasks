@@ -5,13 +5,13 @@ import { UserFormFields } from './UserFormFields';
 export const UserCreateForm = () => {
   const navigate = useNavigate();
 
-  const { form, onSubmit, isLoading } = useCreateUserForm(() => {
+  const { form, onSubmit, isSubmitting } = useCreateUserForm(() => {
     void navigate('/users');
   });
 
   return (
     <form onSubmit={(e) => void form.handleSubmit(onSubmit)(e)}>
-      <UserFormFields control={form.control} isLoading={isLoading} />
+      <UserFormFields control={form.control} isLoading={isSubmitting} />
     </form>
   );
 };
